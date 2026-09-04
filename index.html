@@ -76,14 +76,15 @@
     .a-view-indicator{position:absolute;bottom:-1px;left:0;width:0;height:2px;background:var(--a-blue);transform:translate3d(0,0,0);transform-origin:left;transition:transform 260ms var(--a-ease);pointer-events:none}
     .a-view-hint{display:flex;align-items:center;color:var(--a-soft);font-size:14px}
     .a-route-hero,.a-method-hero{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(280px,.65fr);gap:clamp(40px,8vw,132px);align-items:end;padding:clamp(38px,5vw,72px) 0 clamp(34px,4.5vw,64px)}
-    .a-route-hero{padding:clamp(26px,2.4vw,34px) 0 clamp(24px,2.2vw,30px)}
+    .a-route-hero{grid-template-columns:minmax(0,1.2fr) minmax(360px,.8fr);gap:clamp(40px,6vw,86px);padding:clamp(26px,2.4vw,34px) 0 clamp(24px,2.2vw,30px)}
     .a-title{max-width:none;margin:0;font-size:clamp(52px,5.1vw,78px);font-weight:600;letter-spacing:-.04em;line-height:.98;text-wrap:balance}
     .a-route-hero .a-title,.a-method-hero .a-title{view-transition-name:aico-view-title}
     .a-route-hero .a-hero-copy,.a-method-hero .a-method-intro{view-transition-name:aico-view-intro}
-    .a-hero-copy{display:grid;gap:18px;align-content:end;padding-bottom:4px}
+    .a-hero-copy{display:grid;gap:10px;align-content:end;padding-bottom:2px}
     .a-hero-copy p{max-width:48ch;margin:0;color:var(--a-soft);font-size:16px;line-height:1.55;text-wrap:pretty}
+    .a-hero-copy .a-hero-note{padding-top:10px;border-top:1px solid var(--a-line);color:var(--a-faint);font-size:11px;line-height:1.45}
     .a-hero-copy strong{color:var(--a-ink);font-weight:600}
-    .a-ledger{display:grid;grid-template-columns:minmax(300px,32%) minmax(0,68%);grid-template-rows:auto 1fr;border-block:1px solid var(--a-ink)}
+    .a-ledger{display:grid;grid-template-columns:minmax(300px,32%) minmax(0,68%);grid-template-rows:auto 1fr auto;border-block:1px solid var(--a-ink)}
     .a-contract{min-width:0;border-right:1px solid var(--a-line-strong)}
     .a-contract-inner{padding:30px clamp(24px,3vw,44px) 0 0}
     .a-preflight{display:grid;grid-template-columns:72px minmax(0,1fr);gap:18px;padding-bottom:28px;border-bottom:1px solid var(--a-line)}
@@ -119,21 +120,27 @@
     .a-mobile-phase,.a-stage-panel-home{display:none}
     .a-route-shell{--active:0;position:relative}
     .a-route-list{position:relative;display:grid;height:154px;grid-template-columns:repeat(6,minmax(0,1fr));margin:0;padding:0;list-style:none}
-    .a-route-line{position:absolute;z-index:0;right:calc(100% / 12);bottom:25px;left:calc(100% / 12);height:1px;background:var(--a-ink);transform-origin:left}
+    .a-route-line{position:absolute;z-index:0;right:0;bottom:25px;left:0;height:1px;background:var(--a-ink);transform-origin:left}
     .a-route-line::before,.a-route-line::after{position:absolute;top:-3px;width:1px;height:7px;background:var(--a-ink);content:""}
     .a-route-line::before{left:0}.a-route-line::after{right:0}
-    .a-route-stage{position:relative;z-index:2;min-width:0}
-    .a-stage-tab{position:relative;display:grid;width:100%;height:100%;grid-template-rows:minmax(0,1fr) 50px;align-items:stretch;padding:0 10px;border:0;background:transparent;text-align:left;cursor:pointer}
+    .a-route-stage{position:relative;z-index:2;min-width:0;overflow:visible}
+    .a-stage-tab{position:relative;display:grid;width:100%;height:100%;grid-template-rows:minmax(0,1fr) 50px;align-items:stretch;padding:0 16px;border:0;background:transparent;text-align:left;cursor:pointer}
+    .a-route-stage:first-child .a-stage-tab{transform:none;text-align:left}
+    .a-route-stage[data-stage-item="t3"] .a-stage-tab{width:100%;transform:none;text-align:right}
     .a-stage-label{display:block;align-self:start;min-width:0;padding-top:14px}
     .a-stage-code{display:block;margin-bottom:5px;color:var(--a-ink);font-size:17px;font-weight:500;font-variant-numeric:tabular-nums;transition:color 220ms ease,transform 220ms var(--a-ease)}
-    .a-stage-name{display:block;max-width:15ch;color:var(--a-soft);font-size:12px;line-height:1.32;text-wrap:balance;transition:color 220ms ease}
-    .a-stage-node-wrap{display:flex;height:50px;align-items:center;justify-content:center}
+    .a-stage-name{display:block;max-width:15ch;margin:0;color:var(--a-soft);font-size:12px;line-height:1.32;text-wrap:balance;transition:color 220ms ease}
+    .a-route-stage:first-child .a-stage-name{margin-left:0}
+    .a-route-stage[data-stage-item="t3"] .a-stage-name{margin-right:0}
+    .a-stage-node-wrap{display:flex;height:50px;align-items:center;justify-content:flex-start}
+    .a-route-stage:first-child .a-stage-node-wrap{justify-content:flex-start}
+    .a-route-stage[data-stage-item="t3"] .a-stage-node-wrap{justify-content:flex-end}
     .a-stage-node{display:block;width:15px;height:15px;border:1px solid var(--a-ink);border-radius:50%;background:var(--a-paper);transform-origin:center;transition:background 220ms ease,border-color 220ms ease,transform 220ms var(--a-ease)}
     .a-route-stage.is-active .a-stage-code,.a-route-stage.is-active .a-stage-name{color:var(--a-blue)}
     .a-route-stage.is-active .a-stage-node{border-color:var(--a-blue);background:var(--a-blue);transform:scale(1.08)}
-    .a-route-cursor{position:absolute;z-index:1;top:2px;left:0;width:calc(100% / 6);height:152px;pointer-events:none;transform:translate3d(calc(var(--active) * 100%),0,0);transition:transform var(--a-motion) var(--a-ease)}
+    .a-route-cursor{position:absolute;z-index:1;top:2px;left:calc(var(--active) * 16.6666667%);width:16.6666667%;height:152px;pointer-events:none;transition:left var(--a-motion) var(--a-ease)}
     .a-route-cursor::before{position:absolute;inset:2px 4px 0;border:1px solid var(--a-blue);content:"";clip-path:polygon(0 0,16px 0,16px 1px,calc(100% - 16px) 1px,calc(100% - 16px) 0,100% 0,100% 100%,calc(100% - 16px) 100%,calc(100% - 16px) calc(100% - 1px),16px calc(100% - 1px),16px 100%,0 100%)}
-    .a-route-pulse{position:absolute;z-index:7;top:125px;left:8.333%;width:8px;height:8px;margin-left:-4px;border-radius:50%;background:var(--a-blue);box-shadow:-9px 0 0 -2px rgba(37,72,201,.35);opacity:0;pointer-events:none}
+    .a-route-pulse{position:absolute;z-index:7;top:125px;left:0;width:8px;height:8px;margin-left:-4px;border-radius:50%;background:var(--a-blue);box-shadow:-9px 0 0 -2px rgba(37,72,201,.35);opacity:0;pointer-events:none}
     .a-stage-panel{position:relative;min-height:344px;view-transition-name:aico-stage-detail}
     .a-detail-head{display:grid;grid-template-columns:110px minmax(0,1fr) minmax(150px,.34fr);grid-template-areas:"code title meta" "code summary meta";column-gap:24px;row-gap:9px;align-items:start;padding:30px 0 26px}
     .a-detail-code{grid-area:code;align-self:center;justify-self:center;color:var(--a-blue);font-size:clamp(62px,6vw,90px);font-weight:400;font-variant-numeric:tabular-nums;letter-spacing:-.055em;line-height:.8}
@@ -154,8 +161,7 @@
     .a-detail-block.is-role .a-detail-list li{color:var(--a-ink)}
     .a-detail-block.is-role .a-detail-list li::before{background:var(--a-blue)}
     .a-detail-block>p{margin:0;color:var(--a-soft);font-size:12px;line-height:1.52;text-wrap:pretty}
-    .a-route-footer{display:flex;align-items:flex-start;justify-content:space-between;gap:32px;padding:24px 0 42px;border-bottom:1px solid var(--a-ink)}
-    .a-route-footer p{max-width:68ch;margin:0;color:var(--a-faint);font-size:12px;line-height:1.55}
+    .a-route-footer{display:flex;grid-column:1/-1;grid-row:3;align-items:center;justify-content:flex-end;padding:22px 0 24px;border-top:1px solid var(--a-line-strong)}
     .a-text-action{display:inline-flex;flex:none;gap:11px;align-items:center;padding:0 0 4px;border:0;border-bottom:1px solid currentColor;background:transparent;color:var(--a-blue);font-size:14px;font-weight:600;cursor:pointer}
     .a-arrow{position:relative;width:18px;height:8px;transition:transform 220ms var(--a-ease)}
     .a-arrow::before{position:absolute;top:4px;right:0;left:0;height:1px;background:currentColor;content:""}
@@ -192,6 +198,19 @@
     .a-inline-status{display:block;margin-top:6px;color:var(--a-blue);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.045em}
     .a-method-note p,.a-data-column p{max-width:64ch;margin:0 0 14px;color:var(--a-soft);font-size:13px;line-height:1.62;text-wrap:pretty}
     .a-method-note p:last-child,.a-data-column p:last-child{margin-bottom:0}
+    .a-design-list{border-top:1px solid var(--a-ink)}
+    .a-design-row{border-bottom:1px solid var(--a-line)}
+    .a-design-row summary{position:relative;display:grid;grid-template-columns:62px minmax(0,1fr) minmax(160px,.38fr);gap:24px;align-items:center;min-height:82px;padding:14px 38px 14px 0;list-style:none;cursor:pointer}
+    .a-design-row summary::-webkit-details-marker{display:none}
+    .a-design-code{color:var(--a-blue);font-size:32px;font-weight:500;font-variant-numeric:tabular-nums;letter-spacing:-.04em;line-height:1}
+    .a-design-title{font-size:19px;font-weight:600;letter-spacing:-.025em;line-height:1.2;text-wrap:balance}
+    .a-design-row .a-inline-status{align-self:center;margin:0}
+    .a-design-body{display:grid;grid-template-columns:62px minmax(0,1fr) minmax(230px,.62fr);gap:24px;padding:1px 38px 25px 0}
+    .a-design-description{grid-column:2;max-width:62ch;margin:0;color:var(--a-soft);font-size:13px;line-height:1.58;text-wrap:pretty}
+    .a-design-evidence{min-height:100%;padding-left:24px;border-left:1px solid var(--a-line)}
+    .a-design-evidence h4{margin:0 0 10px;color:var(--a-faint);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.045em}
+    .a-design-evidence p{max-width:62ch;margin:0;color:var(--a-soft);font-size:13px;line-height:1.58;text-wrap:pretty}
+    .a-design-evidence strong{color:var(--a-ink);font-weight:600}
     .a-measure-list{border-top:1px solid var(--a-ink)}
     .a-measure{border-bottom:1px solid var(--a-line)}
     .a-measure summary,.a-faq summary{position:relative;list-style:none;cursor:pointer}
@@ -217,7 +236,7 @@
     .a-faq{border-bottom:1px solid var(--a-line)}
     .a-faq summary{padding:18px 40px 18px 0;font-size:16px;font-weight:600;line-height:1.4;text-wrap:pretty}
     .a-faq .a-disclosure-body{display:block;max-width:76ch;padding:0 40px 22px 0}
-    .a-view-tab:focus-visible,.a-stage-tab:focus-visible,.a-text-action:focus-visible,.a-method-index a:focus-visible,.a-measure summary:focus-visible,.a-faq summary:focus-visible{outline:2px solid var(--a-blue);outline-offset:4px}
+    .a-view-tab:focus-visible,.a-stage-tab:focus-visible,.a-text-action:focus-visible,.a-method-index a:focus-visible,.a-design-row summary:focus-visible,.a-measure summary:focus-visible,.a-faq summary:focus-visible{outline:2px solid var(--a-blue);outline-offset:4px}
     ::view-transition-old(root),::view-transition-new(root){animation:none}
     ::view-transition-group(aico-view-title),::view-transition-group(aico-view-intro),::view-transition-group(aico-view-body){animation-duration:420ms;animation-timing-function:var(--a-ease)}
     ::view-transition-old(aico-view-title){animation:a-view-title-out 160ms ease both}
@@ -241,12 +260,13 @@
     }
     @media(max-width:1100px){
       .a-route-hero,.a-method-hero{grid-template-columns:1fr;gap:26px}
-      .a-hero-copy{grid-template-columns:minmax(0,1fr) auto;align-items:end}
-      .a-ledger{grid-template-columns:1fr;grid-template-rows:auto auto auto}
+      .a-hero-copy{grid-template-columns:minmax(0,1fr) minmax(260px,.58fr);gap:28px;align-items:start}
+      .a-ledger{grid-template-columns:1fr;grid-template-rows:auto auto auto auto}
       .a-contract{grid-column:1;grid-row:1;border-right:0;border-bottom:1px solid var(--a-line-strong)}
       .a-contract-inner{position:static;padding:28px 0}
       .a-workbench{grid-column:1;grid-row:2}
       .a-duty-panel{grid-column:1;grid-row:3;padding:0 0 28px;border-top:1px solid var(--a-line-strong);border-right:0}
+      .a-route-footer{grid-column:1;grid-row:4}
       .a-preflight{grid-template-columns:80px minmax(0,1fr);padding-bottom:24px}
       .a-preflight h2{max-width:none}
       .a-preflight p{max-width:62ch}
@@ -287,17 +307,17 @@
       .a-workbench-head{margin-bottom:16px}
       .a-phase-band{display:none}
       .a-mobile-phase{display:block;padding:18px 0 5px 46px;color:var(--a-faint);font-size:10px;line-height:1.3;text-transform:uppercase;letter-spacing:.045em}
-      .a-route-list{height:auto;grid-template-columns:1fr;padding:8px 0}
+      .a-route-list{display:grid;height:auto;grid-template-columns:1fr;justify-content:stretch;padding:8px 0}
       .a-route-list::before{position:absolute;top:61px;bottom:38px;left:17px;width:1px;background:var(--a-line-strong);content:""}
       .a-route-line,.a-route-cursor,.a-route-pulse{display:none}
-      .a-route-stage{min-height:64px}
-      .a-stage-tab{height:64px;grid-template-columns:36px minmax(0,1fr);grid-template-rows:1fr;gap:10px;align-items:center;padding:0 12px 0 0}
+      .a-route-stage{width:auto;min-height:64px;flex:none;overflow:visible}
+      .a-stage-tab,.a-route-stage:first-child .a-stage-tab,.a-route-stage[data-stage-item="t2"] .a-stage-tab,.a-route-stage[data-stage-item="t3"] .a-stage-tab{width:100%;height:64px;grid-template-columns:36px minmax(0,1fr);grid-template-rows:1fr;gap:10px;align-items:center;padding:0 12px 0 0;text-align:left;transform:none}
       .a-route-stage.is-active .a-stage-tab::before{position:absolute;z-index:0;inset:4px 0;border:1px solid var(--a-blue);content:"";clip-path:polygon(0 0,14px 0,14px 1px,calc(100% - 14px) 1px,calc(100% - 14px) 0,100% 0,100% 100%,calc(100% - 14px) 100%,calc(100% - 14px) calc(100% - 1px),14px calc(100% - 1px),14px 100%,0 100%)}
       .a-stage-tab>*{position:relative;z-index:1}
       .a-stage-label{display:grid;grid-column:2;grid-row:1;grid-template-columns:48px minmax(0,1fr);gap:8px;align-items:center;padding:0}
       .a-stage-code{margin:0;font-size:15px}
-      .a-stage-name{max-width:none;font-size:14px}
-      .a-stage-node-wrap{grid-column:1;grid-row:1;height:auto;justify-content:center}
+      .a-stage-name,.a-route-stage:first-child .a-stage-name,.a-route-stage[data-stage-item="t3"] .a-stage-name{max-width:none;margin:0;font-size:14px}
+      .a-stage-node-wrap,.a-route-stage:first-child .a-stage-node-wrap,.a-route-stage[data-stage-item="t3"] .a-stage-node-wrap{grid-column:1;grid-row:1;height:auto;justify-content:center;transform:none}
       .a-stage-node{width:13px;height:13px}
       .a-route-stage>.a-stage-panel{z-index:3;min-height:0;margin:10px 0 20px 36px;background:var(--a-paper)}
       .a-detail-head{grid-template-columns:72px minmax(0,1fr);grid-template-areas:"code title" ". summary" ". meta";column-gap:18px;row-gap:9px;padding:27px 0 23px}
@@ -309,7 +329,7 @@
       .a-detail-block+.a-detail-block{padding-left:18px}
       .a-detail-block:nth-child(odd){padding-left:0;border-left:0}
       .a-detail-block.is-role{order:-1}
-      .a-route-footer{display:grid;gap:22px}
+      .a-route-footer{justify-content:flex-start}
       .a-text-action{justify-self:start}
       .a-status-key{grid-template-columns:1fr}
       .a-status-key span:nth-child(even){padding-left:0;border-left:0}
@@ -318,6 +338,12 @@
       .a-method-pair,.a-data-grid,.a-scale-list{grid-template-columns:1fr}
       .a-method-note,.a-data-column,.a-scale{padding:20px 0;border-bottom:1px solid var(--a-line)}
       .a-method-note+.a-method-note,.a-data-column+.a-data-column,.a-scale:nth-child(even){padding-left:0;border-left:0}
+      .a-design-row summary{grid-template-columns:44px minmax(0,1fr);gap:7px 16px;min-height:76px;padding:13px 30px 13px 0}
+      .a-design-code{grid-row:1/3;font-size:27px}
+      .a-design-row .a-inline-status{grid-column:2}
+      .a-design-body{grid-template-columns:44px minmax(0,1fr);gap:14px 16px;padding:0 30px 20px 0}
+      .a-design-description,.a-design-evidence{grid-column:2}
+      .a-design-evidence{min-height:0;padding:15px 0 0;border-top:1px solid var(--a-line);border-left:0}
       .a-measure summary{grid-template-columns:52px minmax(0,1fr);gap:8px 12px;min-height:84px;padding-right:30px}
       .a-measure-status,.a-measure-time{grid-column:2}
       .a-measure-time{margin-top:-4px}
@@ -431,6 +457,7 @@
           <h1 class="a-title">Маршрут преподавателя</h1>
           <div class="a-hero-copy">
             <p><strong>AICO</strong> — ИИ-компаньон, который работает с материалами курса. Здесь — общий путь исследования и моменты, когда потребуется ваше участие.</p>
+            <p class="a-hero-note">Точные даты всех точек привязываются к календарю дисциплины. Необходимость T1 и возможность T3 подтверждаются отдельно для каждого курса.</p>
           </div>
         </header>
 
@@ -459,7 +486,7 @@
               <span class="a-phase">После основного периода</span>
             </div>
 
-            <div class="a-route-shell" id="route-shell" style="--active:0">
+            <div class="a-route-shell" id="route-shell" data-active="p1" style="--active:0">
               <ol class="a-route-list" id="route-list" role="tablist" aria-label="Шесть контрольных точек" aria-orientation="horizontal">
                 <li class="a-route-stage is-active" data-stage-item="p1">
                   <span class="a-mobile-phase">До доступа к AICO</span>
@@ -505,7 +532,7 @@
                   <div class="a-detail-code">P1</div>
                   <h3 class="a-detail-title">Старт курса</h3>
                   <p class="a-detail-summary">Курс начинается по обычной программе; согласованная схема исследования становится рабочей.</p>
-                  <div class="a-detail-meta"><span class="a-detail-status">Зафиксировано</span><span>На старте курса</span></div>
+                  <div class="a-detail-meta"><span class="a-detail-status">Зафиксировано</span></div>
                 </header>
                 <div class="a-detail-grid">
                   <section class="a-detail-block"><h4>Что происходит</h4><ul class="a-detail-list"><li>Студенты начинают обучение в обычном режиме.</li><li>Команда сверяет состав групп и календарь.</li></ul></section>
@@ -535,12 +562,11 @@
               </section>
             </div>
           </aside>
-        </section>
 
-        <div class="a-page a-route-footer">
-          <p>Точные даты всех точек привязываются к календарю дисциплины. T1 остаётся рабочим планом, а возможность T3 подтверждается отдельно для каждого курса.</p>
-          <button class="a-text-action" type="button" data-open-view="method">Открыть метод, анкеты и шкалы<span class="a-arrow" aria-hidden="true"></span></button>
-        </div>
+          <div class="a-route-footer">
+            <button class="a-text-action" type="button" data-open-view="method">Открыть метод, анкеты и шкалы<span class="a-arrow" aria-hidden="true"></span></button>
+          </div>
+        </section>
       </section>
 
       <section id="view-method" role="tabpanel" aria-labelledby="view-tab-method" hidden>
@@ -549,7 +575,7 @@
           <div class="a-method-intro">
             <p>Основные правила сравнения, контрольные точки и источники данных. Конкретная схема и даты подтверждаются отдельно для каждого курса.</p>
             <div class="a-status-key" aria-label="Статусы элементов протокола">
-              <span>Зафиксировано — общее правило</span><span>По курсу — согласуется отдельно</span><span>Рабочий план — может измениться</span><span>Требует согласования — не финальное решение</span>
+              <span>Зафиксировано — общее правило</span><span>По курсу — согласуется отдельно</span>
             </div>
           </div>
         </header>
@@ -559,21 +585,53 @@
             <div class="a-method-index-inner">
               <h2>Содержание</h2>
               <ol>
-                <li><a href="#method-comparison" data-method-link><span>01</span><span>Как устроено сравнение</span></a></li>
-                <li><a href="#method-points" data-method-link><span>02</span><span>Контрольные точки</span></a></li>
-                <li><a href="#method-scales" data-method-link><span>03</span><span>Анкеты и шкалы</span></a></li>
-                <li><a href="#method-data" data-method-link><span>04</span><span>Данные и этика</span></a></li>
-                <li><a href="#method-faq" data-method-link><span>05</span><span>Частые вопросы</span></a></li>
+                <li><a href="#method-overview" data-method-link><span>01</span><span>Об эксперименте</span></a></li>
+                <li><a href="#method-comparison" data-method-link><span>02</span><span>Как устроено сравнение</span></a></li>
+                <li><a href="#method-designs" data-method-link><span>03</span><span>Типы дизайна</span></a></li>
+                <li><a href="#method-points" data-method-link><span>04</span><span>Контрольные точки</span></a></li>
+                <li><a href="#method-scales" data-method-link><span>05</span><span>Анкеты и шкалы</span></a></li>
+                <li><a href="#method-data" data-method-link><span>06</span><span>Данные и этика</span></a></li>
+                <li><a href="#method-faq" data-method-link><span>07</span><span>Частые вопросы</span></a></li>
               </ol>
             </div>
           </nav>
 
           <div class="a-method-content">
+            <section class="a-method-section" id="method-overview" data-motion>
+              <header class="a-section-head"><h2>Об эксперименте</h2><p>AICO — ИИ-компаньон, встроенный в конкретный университетский курс и работающий с его материалами. Исследование проверяет, улучшает ли предложение доступа к AICO самостоятельный результат обучения по сравнению с тем же курсом без доступа.</p></header>
+              <div class="a-method-pair">
+                <article class="a-method-note"><h3>Что именно оцениваем<span class="a-inline-status">Зафиксировано</span></h3><p>Оценивается доступ ко всему пакету AICO, доступному студенту на курсе: чату, объяснениям, самопроверке, кейсам и другим учебным функциям. Это не тест отдельной языковой модели или одного сценария использования.</p></article>
+                <article class="a-method-note"><h3>Главный результат<span class="a-inline-status">Зафиксировано</span></h3><p>Основной показатель — балл итогового предметного теста T2, выполненного без AICO и внешнего ИИ. Использование продукта, число сообщений и удовлетворённость помогают понять механизм и пользовательский опыт, но сами по себе не доказывают обучение.</p><p>Если проводится T3, он дополнительно проверяет сохранение знаний и перенос на новые задачи.</p></article>
+              </div>
+            </section>
+
             <section class="a-method-section" id="method-comparison" data-motion>
-              <header class="a-section-head"><h2>Как устроено сравнение</h2><p>Мы сравниваем студентов внутри одного официального курса. Назначенный доступ — основа анализа; частота использования помогает понять механизм, но не заменяет проверку знаний.</p></header>
+              <header class="a-section-head"><h2>Как устроено сравнение</h2><p>Внутри одного курса сравниваем две группы: с доступом к AICO и без него. Результат оцениваем по тестам, а данные об использовании помогают объяснить различия.</p></header>
               <div class="a-method-pair">
                 <article class="a-method-note"><h3>Основной сценарий<span class="a-inline-status">Зафиксировано, если рандомизация возможна</span></h3><p>Исследовательская команда случайно назначает доступ к AICO после получения исходных данных. Преподаватель не выбирает условие студента и не меняет назначение вручную.</p><p>Обе группы проходят один курс; плановое различие — предложение доступа к AICO. Активности внутри AICO не дают официальных баллов и не становятся условием допуска.</p></article>
-                <article class="a-method-note"><h3>Альтернатива<span class="a-inline-status">По курсу</span></h3><p>Если индивидуальное случайное назначение невозможно, заранее согласуется другой формат: назначение целых групп, сопоставимое сравнение без рандомизации или исследование внедрения.</p><p>От выбранной схемы зависит сила допустимых выводов — поэтому страница не обещает один формат для всех дисциплин.</p></article>
+                <article class="a-method-note"><h3>Альтернатива<span class="a-inline-status">По курсу</span></h3><p>Если индивидуальное случайное назначение невозможно, заранее согласуется другой формат: назначение целых групп, сопоставимое сравнение без рандомизации или исследование естественного внедрения.</p><p>От выбранной схемы зависит сила допустимых выводов — поэтому страница не обещает один формат для всех дисциплин.</p></article>
+              </div>
+            </section>
+
+            <section class="a-method-section" id="method-designs" data-motion>
+              <header class="a-section-head"><h2>Типы дизайна</h2><p>Схема выбирается отдельно для каждого курса. Чем надёжнее контролируются различия между условиями, тем сильнее вывод о влиянии доступа к AICO.</p></header>
+              <div class="a-design-list">
+                <details class="a-design-row" data-disclosure>
+                  <summary><span class="a-design-code">A</span><span class="a-design-title">Индивидуальный рандомизированный эксперимент</span><span class="a-inline-status">Основной стандарт</span><span class="a-disclosure-mark" aria-hidden="true"></span></summary>
+                  <div class="a-design-body"><p class="a-design-description">Доступ случайно назначается отдельным студентам внутри одного курса. Обе группы проходят одинаковую программу и тесты.</p><div class="a-design-evidence"><h4>Доказательная сила</h4><p><strong>Наиболее высокая.</strong> Позволяет оценить причинный ITT-эффект предложения доступа к AICO.</p></div></div>
+                </details>
+                <details class="a-design-row" data-disclosure>
+                  <summary><span class="a-design-code">B</span><span class="a-design-title">Кластерный рандомизированный эксперимент</span><span class="a-inline-status">По курсу</span><span class="a-disclosure-mark" aria-hidden="true"></span></summary>
+                  <div class="a-design-body"><p class="a-design-description">Случайно назначаются целые учебные группы. Требуются достаточное число независимых групп и кластерный анализ.</p><div class="a-design-evidence"><h4>Доказательная сила</h4><p><strong>Высокая при выполнении условий.</strong> Позволяет оценить причинный эффект назначения групп; при малом числе групп результат считается пилотным.</p></div></div>
+                </details>
+                <details class="a-design-row" data-disclosure>
+                  <summary><span class="a-design-code">C</span><span class="a-design-title">Контролируемый квазиэксперимент</span><span class="a-inline-status">По курсу</span><span class="a-disclosure-mark" aria-hidden="true"></span></summary>
+                  <div class="a-design-body"><p class="a-design-description">Готовая группа с AICO сравнивается с одновременной сопоставимой контрольной группой без случайного назначения. Учитываются входной уровень и наблюдаемые различия.</p><div class="a-design-evidence"><h4>Доказательная сила</h4><p><strong>Ограниченная.</strong> Результат совместим с эффектом AICO, но скрытые различия между группами нельзя полностью исключить.</p></div></div>
+                </details>
+                <details class="a-design-row" data-disclosure>
+                  <summary><span class="a-design-code">D</span><span class="a-design-title">Исследование естественного внедрения</span><span class="a-inline-status">По курсу</span><span class="a-disclosure-mark" aria-hidden="true"></span></summary>
+                  <div class="a-design-body"><p class="a-design-description">Участников наблюдают во времени без сопоставимой рандомизированной контрольной группы: собирают P2, T2/T3, результаты курса и логи AICO.</p><div class="a-design-evidence"><h4>Доказательная сила</h4><p><strong>Описательная.</strong> Показывает осуществимость, динамику и механизмы внедрения, но не доказывает причинный эффект AICO.</p></div></div>
+                </details>
               </div>
             </section>
 
@@ -581,23 +639,23 @@
               <header class="a-section-head"><h2>Контрольные точки</h2><p>Точки обозначают события, а не равные интервалы времени. Сроки зависят от календаря курса; T2 — главный итоговый замер.</p></header>
               <div class="a-measure-list">
                 <details class="a-measure" data-disclosure><summary><span class="a-measure-code">P1</span><span class="a-measure-title">Старт курса</span><span class="a-measure-status">Зафиксировано</span><span class="a-measure-time">На старте курса</span><span class="a-disclosure-mark" aria-hidden="true"></span></summary><div class="a-disclosure-body"><p>Фиксируются актуальные группы, календарь и контекст дисциплины. Курс начинается по обычной программе, без специального режима преподавания.</p><p><strong>Роль преподавателя:</strong> подтвердить расписание и сообщить об изменениях, способных повлиять на замеры.</p></div></details>
-                <details class="a-measure" data-disclosure><summary><span class="a-measure-code">P2</span><span class="a-measure-title">Получение исходных данных</span><span class="a-measure-status">Зафиксировано · по курсу</span><span class="a-measure-time">До доступа к AICO</span><span class="a-disclosure-mark" aria-hidden="true"></span></summary><div class="a-disclosure-body"><p>Соединяются доступные показатели вуза, входной предметный тест и исходные опросы. Фактический набор зависит от возможностей площадки.</p><p><strong>Важно:</strong> P2 помогает точнее сравнить группы, но сам по себе не доказывает, что они «одинаковы».</p></div></details>
-                <details class="a-measure" data-disclosure><summary><span class="a-measure-code">R</span><span class="a-measure-title">Начало работы с AICO</span><span class="a-measure-status">Зафиксировано для рандомизированной схемы</span><span class="a-measure-time">После P2</span><span class="a-disclosure-mark" aria-hidden="true"></span></summary><div class="a-disclosure-body"><p>Команда замораживает список участников, назначает условия и выдаёт права. В начале проверяются доступ, идентификаторы и поступление логов.</p><p><strong>Роль преподавателя:</strong> использовать единый текст коммуникации и не менять назначенный доступ.</p></div></details>
-                <details class="a-measure" data-disclosure><summary><span class="a-measure-code">T1</span><span class="a-measure-title">Промежуточный тест</span><span class="a-measure-status">Рабочий план</span><span class="a-measure-time">Ориентир: через 3–4 недели</span><span class="a-disclosure-mark" aria-hidden="true"></span></summary><div class="a-disclosure-body"><p>Короткий предметный тест и небольшой опрос дают ранний сигнал о ходе обучения, нагрузке, внешнем ИИ и технических проблемах.</p><p>T1 не считается вторым главным результатом. Форма, инструкция и точный срок подтверждаются для курса.</p></div></details>
-                <details class="a-measure" data-disclosure open><summary><span class="a-measure-code">T2</span><span class="a-measure-title">Итоговый тест</span><span class="a-measure-status">Главный замер · зафиксировано</span><span class="a-measure-time">В конце основного периода</span><span class="a-disclosure-mark" aria-hidden="true"></span></summary><div class="a-disclosure-body"><p>Одинаковый предметный тест выполняется без AICO и внешнего ИИ, в одинаковых условиях и по единой рубрике. Балл T2 — главный показатель самостоятельного результата.</p><p><strong>По курсу:</strong> дата и содержание согласуются с календарём и учебными целями дисциплины.</p></div></details>
-                <details class="a-measure" data-disclosure><summary><span class="a-measure-code">T3</span><span class="a-measure-title">Пост-тест</span><span class="a-measure-status">Рабочий план · по курсу</span><span class="a-measure-time">Окно: через 2–6 недель</span><span class="a-disclosure-mark" aria-hidden="true"></span></summary><div class="a-disclosure-body"><p>Параллельный тест проверяет сохранение знаний, а новая задача — перенос в незнакомую ситуацию. Целевой ориентир — четыре недели после T2.</p><p>T3 проводится только там, где можно обеспечить одинаковую контролируемую процедуру. Возможность и дата подтверждаются отдельно.</p></div></details>
+                <details class="a-measure" data-disclosure><summary><span class="a-measure-code">P2</span><span class="a-measure-title">Получение исходных данных</span><span class="a-measure-status">Определяется<br>отдельно&nbsp;на&nbsp;курс</span><span class="a-measure-time">До доступа к AICO</span><span class="a-disclosure-mark" aria-hidden="true"></span></summary><div class="a-disclosure-body"><p>Соединяются доступные показатели вуза, входной предметный тест и исходные опросы. Фактический набор зависит от возможностей площадки.</p><p><strong>Важно:</strong> P2 помогает точнее сравнить группы, но сам по себе не доказывает, что они «одинаковы».</p></div></details>
+                <details class="a-measure" data-disclosure><summary><span class="a-measure-code">R</span><span class="a-measure-title">Начало работы с AICO</span><span class="a-measure-status">Зафиксировано</span><span class="a-measure-time">После P2</span><span class="a-disclosure-mark" aria-hidden="true"></span></summary><div class="a-disclosure-body"><p>Команда замораживает список участников, назначает условия и выдаёт права. В начале проверяются доступ, идентификаторы и поступление логов.</p><p><strong>Роль преподавателя:</strong> использовать единый текст коммуникации и не менять назначенный доступ.</p></div></details>
+                <details class="a-measure" data-disclosure><summary><span class="a-measure-code">T1</span><span class="a-measure-title">Промежуточный тест</span><span class="a-measure-status">Определяется<br>отдельно&nbsp;на&nbsp;курс</span><span class="a-measure-time">Ориентир: через 3–4 недели</span><span class="a-disclosure-mark" aria-hidden="true"></span></summary><div class="a-disclosure-body"><p>Короткий предметный тест и небольшой опрос дают ранний сигнал о ходе обучения, нагрузке, внешнем ИИ и технических проблемах.</p><p>T1 не считается вторым главным результатом. Форма, инструкция и точный срок подтверждаются для курса.</p></div></details>
+                <details class="a-measure" data-disclosure open><summary><span class="a-measure-code">T2</span><span class="a-measure-title">Итоговый тест</span><span class="a-measure-status">Зафиксировано</span><span class="a-measure-time">В конце основного периода</span><span class="a-disclosure-mark" aria-hidden="true"></span></summary><div class="a-disclosure-body"><p>Одинаковый предметный тест выполняется без AICO и внешнего ИИ, в одинаковых условиях и по единой рубрике. Балл T2 — главный показатель самостоятельного результата.</p><p><strong>По курсу:</strong> дата и содержание согласуются с календарём и учебными целями дисциплины.</p></div></details>
+                <details class="a-measure" data-disclosure><summary><span class="a-measure-code">T3</span><span class="a-measure-title">Пост-тест</span><span class="a-measure-status">Определяется<br>отдельно&nbsp;на&nbsp;курс</span><span class="a-measure-time">Окно: через 2–6 недель</span><span class="a-disclosure-mark" aria-hidden="true"></span></summary><div class="a-disclosure-body"><p>Параллельный тест проверяет сохранение знаний, а новая задача — перенос в незнакомую ситуацию. Целевой ориентир — четыре недели после T2.</p><p>T3 проводится только там, где можно обеспечить одинаковую контролируемую процедуру. Возможность и дата подтверждаются отдельно.</p></div></details>
               </div>
             </section>
 
             <section class="a-method-section" id="method-scales" data-motion>
               <header class="a-section-head"><h2>Анкеты и шкалы</h2><p>Шкалы отвечают на разные вопросы и анализируются отдельно. Единый «балл эффективности AICO» из них автоматически не создаётся.</p></header>
               <div class="a-scale-list">
-                <article class="a-scale"><h3>Академическая мотивация</h3><span class="a-inline-status">Подтверждено к сбору</span><p>В контур включена Шкала академической мотивации. Точная версия, длина и точки повторного измерения пока остаются рабочим планом.</p></article>
-                <article class="a-scale"><h3>Саморегуляция</h3><span class="a-inline-status">Подтверждено в контуре</span><p>Изучаются постановка целей, управление временем, стратегии выполнения заданий и самооценка. Конкретный инструмент уточняется.</p></article>
+                <article class="a-scale"><h3>Академическая мотивация</h3><span class="a-inline-status">Зафиксировано</span><p>В контур включена Шкала академической мотивации. Точная версия, длина и точки повторного измерения уточняются для курса.</p></article>
+                <article class="a-scale"><h3>Саморегуляция</h3><span class="a-inline-status">Зафиксировано</span><p>Изучаются постановка целей, управление временем, стратегии выполнения заданий и самооценка. Конкретный инструмент уточняется.</p></article>
                 <article class="a-scale"><h3>Внешний ИИ</h3><span class="a-inline-status">Зафиксировано</span><p>Использование других ИИ-сервисов измеряется в обеих группах и не исключает студента из основного анализа. Частота микроопроса ещё может измениться.</p></article>
-                <article class="a-scale"><h3>Когнитивная нагрузка</h3><span class="a-inline-status">Рабочий план</span><p>После отдельных задач могут задаваться короткие вопросы об усилии, сложности, фрустрации и уверенности.</p></article>
-                <article class="a-scale"><h3>Пользовательский опыт</h3><span class="a-inline-status">Подтверждено к сбору</span><p>Опросы помогают понять полезность, понятность, доверие, а также технические и содержательные проблемы.</p></article>
-                <article class="a-scale"><h3>Интервью</h3><span class="a-inline-status">По курсу и выборке</span><p>В интервью могут участвовать студенты с разными сценариями использования и преподаватели. Объём определяется после реестра курсов.</p></article>
+                <article class="a-scale"><h3>Когнитивная нагрузка</h3><span class="a-inline-status">Зафиксировано</span><p>После отдельных задач могут задаваться короткие вопросы об усилии, сложности, фрустрации и уверенности.</p></article>
+                <article class="a-scale"><h3>Пользовательский опыт</h3><span class="a-inline-status">Зафиксировано</span><p>Опросы помогают понять полезность, понятность, доверие, а также технические и содержательные проблемы.</p></article>
+                <article class="a-scale"><h3>Интервью</h3><span class="a-inline-status">Согласование</span><p>В интервью могут участвовать студенты с разными сценариями использования и преподаватели. Объём определяется после реестра курсов.</p></article>
               </div>
             </section>
 
@@ -632,11 +690,11 @@
     (()=>{
       const stages=[
         {id:"p1",code:"P1",title:"Старт курса",status:"Зафиксировано",time:"На старте курса",summary:"Курс начинается по обычной программе; согласованная схема исследования становится рабочей.",context:["Студенты начинают обучение в обычном режиме.","Команда сверяет состав групп и календарь."],role:["Пройдите короткий онбординг по процедуре и работе с AICO.","Ведите курс по обычной программе.","Подтвердите актуальность расписания и списка группы.","Сообщите о ранних изменениях или инцидентах."],data:"Контекст курса, группы и согласованный календарь замеров.",next:"Получение исходных данных в точке P2.",resources:["Чек-лист подготовки","Календарь курса"]},
-        {id:"p2",code:"P2",title:"Получение исходных данных",status:"Зафиксировано · по курсу",time:"До доступа к AICO",summary:"Исходный уровень и контекст фиксируются до начала работы студентов с AICO.",context:["Студенты проходят входной предметный тест и исходные опросы.","Команда связывает доступные показатели вуза."],role:["Выделите общий слот и дайте всем одинаковую инструкцию.","Следуйте согласованной процедуре входного теста.","Зафиксируйте отклонения от плана."],data:"Входной тест, исходные опросы и доступные показатели вуза.",next:"Команда замораживает список и назначает доступ.",resources:["Инструкция входного замера","Шаблон списка группы"]},
-        {id:"r",code:"R",title:"Начало работы с AICO",status:"Зафиксировано для рандомизированной схемы",time:"После P2",summary:"Исследовательская команда назначает условия, выдаёт права и проверяет технический запуск.",context:["Студенты получают сообщение о своём условии.","Участники с доступом знакомятся с AICO; остальные учатся как обычно."],role:["Используйте единый текст коммуникации.","Не меняйте назначенный доступ вручную.","Сохраняйте одинаковые учебные требования для всех."],data:"Назначенное условие, права доступа и технические логи запуска.",next:"Основной период курса и, если подтверждён, T1.",resources:["Памятка по запуску AICO","Текст для участников"]},
-        {id:"t1",code:"T1",title:"Промежуточный тест",status:"Рабочий план",time:"Ориентир: через 3–4 недели",summary:"Короткий срез даёт ранний сигнал о ходе обучения и условиях проведения.",context:["Студенты выполняют короткий предметный тест.","Небольшой опрос уточняет нагрузку, внешний ИИ и проблемы."],role:["Проведите замер в общем слоте по согласованной инструкции.","Обеспечьте одинаковые условия.","Сообщите о технических и организационных отклонениях."],data:"Результат теста, нагрузка, контекст и технические проблемы.",next:"Продолжение курса и подготовка главного итогового замера.",resources:["Инструкция промежуточного замера","Журнал отклонений"]},
-        {id:"t2",code:"T2",title:"Итоговый тест",status:"Главный замер · зафиксировано",time:"В конце основного периода",summary:"Главный тест проверяет самостоятельное понимание и применение материала.",context:["Студенты выполняют одинаковый предметный тест без AICO и внешнего ИИ.","После теста заполняют итоговые опросы."],role:["Обеспечьте одинаковые условия и единую инструкцию.","Контролируйте самостоятельное выполнение без ИИ.","Передайте результаты в согласованном формате."],data:"Балл T2 — главный результат; также итоговые опросы и контекст.",next:"T3, если его можно провести по единой процедуре.",resources:["Инструкция итогового теста","Шаблон передачи результатов"]},
-        {id:"t3",code:"T3",title:"Пост-тест",status:"Рабочий план · по курсу",time:"Окно: через 2–6 недель",summary:"Отсроченная проверка оценивает сохранение знаний и перенос в новую ситуацию.",context:["Студенты проходят параллельный тест без ИИ.","Новая задача проверяет перенос знаний."],role:["Заранее зарезервируйте общий слот.","Проведите проверку по единой процедуре без ИИ.","Зафиксируйте отклонения, если они возникли."],data:"Сохранение знаний, перенос и несколько завершающих вопросов.",next:"Сбор данных завершён; команда переходит к анализу.",resources:["Инструкция пост-теста","Завершающий чек-лист"]}
+        {id:"p2",code:"P2",title:"Получение исходных данных",status:"Определяется отдельно&nbsp;на&nbsp;курс",time:"До доступа к AICO",summary:"Исходный уровень и контекст фиксируются до начала работы студентов с AICO.",context:["Студенты проходят входной предметный тест и исходные опросы.","Команда связывает доступные показатели вуза."],role:["Выделите общий слот и дайте всем одинаковую инструкцию.","Следуйте согласованной процедуре входного теста.","Зафиксируйте отклонения от плана."],data:"Входной тест, исходные опросы и доступные показатели вуза.",next:"Команда замораживает список и назначает доступ.",resources:["Инструкция входного замера","Шаблон списка группы"]},
+        {id:"r",code:"R",title:"Начало работы с AICO",status:"Зафиксировано",time:"После P2",summary:"Исследовательская команда назначает условия, выдаёт права и проверяет технический запуск.",context:["Студенты получают сообщение о своём условии.","Участники с доступом знакомятся с AICO; остальные учатся как обычно."],role:["Используйте единый текст коммуникации.","Не меняйте назначенный доступ вручную.","Сохраняйте одинаковые учебные требования для всех."],data:"Назначенное условие, права доступа и технические логи запуска.",next:"Основной период курса и, если подтверждён, T1.",resources:["Памятка по запуску AICO","Текст для участников"]},
+        {id:"t1",code:"T1",title:"Промежуточный тест",status:"Определяется отдельно&nbsp;на&nbsp;курс",time:"Ориентир: через 3–4 недели",summary:"Короткий срез даёт ранний сигнал о ходе обучения и условиях проведения.",context:["Студенты выполняют короткий предметный тест.","Небольшой опрос уточняет нагрузку, внешний ИИ и проблемы."],role:["Проведите замер в общем слоте по согласованной инструкции.","Обеспечьте одинаковые условия.","Сообщите о технических и организационных отклонениях."],data:"Результат теста, нагрузка, контекст и технические проблемы.",next:"Продолжение курса и подготовка главного итогового замера.",resources:["Инструкция промежуточного замера","Журнал отклонений"]},
+        {id:"t2",code:"T2",title:"Итоговый тест",status:"Зафиксировано",time:"В конце основного периода",summary:"Главный тест проверяет самостоятельное понимание и применение материала.",context:["Студенты выполняют одинаковый предметный тест без AICO и внешнего ИИ.","После теста заполняют итоговые опросы."],role:["Обеспечьте одинаковые условия и единую инструкцию.","Контролируйте самостоятельное выполнение без ИИ.","Передайте результаты в согласованном формате."],data:"Балл T2 — главный результат; также итоговые опросы и контекст.",next:"T3, если его можно провести по единой процедуре.",resources:["Инструкция итогового теста","Шаблон передачи результатов"]},
+        {id:"t3",code:"T3",title:"Пост-тест",status:"Определяется отдельно&nbsp;на&nbsp;курс",time:"Окно: через 2–6 недель",summary:"Отсроченная проверка оценивает сохранение знаний и перенос в новую ситуацию.",context:["Студенты проходят параллельный тест без ИИ.","Новая задача проверяет перенос знаний."],role:["Заранее зарезервируйте общий слот.","Проведите проверку по единой процедуре без ИИ.","Зафиксируйте отклонения, если они возникли."],data:"Сохранение знаний, перенос и несколько завершающих вопросов.",next:"Сбор данных завершён; команда переходит к анализу.",resources:["Инструкция пост-теста","Завершающий чек-лист"]}
       ];
 
       const app=document.getElementById("aico-app");
@@ -662,7 +720,7 @@
 
       const listMarkup=items=>`<ul class="a-detail-list">${items.map(item=>`<li>${item}</li>`).join("")}</ul>`;
       const resourceMarkup=items=>items.map((item,index)=>`<li class="a-resource-item"><span class="a-resource-index">${String(index+1).padStart(2,"0")}</span><span>${item}</span></li>`).join("");
-      const panelMarkup=stage=>`<header class="a-detail-head"><div class="a-detail-code">${stage.code}</div><h3 class="a-detail-title">${stage.title}</h3><p class="a-detail-summary">${stage.summary}</p><div class="a-detail-meta"><span class="a-detail-status">${stage.status}</span><span>${stage.time}</span></div></header><div class="a-detail-grid"><section class="a-detail-block"><h4>Что происходит</h4>${listMarkup(stage.context)}</section><section class="a-detail-block is-role"><h4>Ваша роль</h4>${listMarkup(stage.role)}</section><section class="a-detail-block"><h4>Что собираем</h4><p>${stage.data}</p></section><section class="a-detail-block"><h4>Дальше</h4><p>${stage.next}</p></section></div>`;
+      const panelMarkup=stage=>`<header class="a-detail-head"><div class="a-detail-code">${stage.code}</div><h3 class="a-detail-title">${stage.title}</h3><p class="a-detail-summary">${stage.summary}</p><div class="a-detail-meta"><span class="a-detail-status">${stage.status}</span></div></header><div class="a-detail-grid"><section class="a-detail-block"><h4>Что происходит</h4>${listMarkup(stage.context)}</section><section class="a-detail-block is-role"><h4>Ваша роль</h4>${listMarkup(stage.role)}</section><section class="a-detail-block"><h4>Что собираем</h4><p>${stage.data}</p></section><section class="a-detail-block"><h4>Дальше</h4><p>${stage.next}</p></section></div>`;
 
       function updateViewIndicator(){
         const selected=viewTabs.find(tab=>tab.getAttribute("aria-selected")==="true");
@@ -688,8 +746,8 @@
 
       function runRouteSignal(fromIndex,toIndex){
         if(reduce.matches||vertical.matches||fromIndex===toIndex)return;
-        const from=((fromIndex+.5)/stages.length)*100;
-        const to=((toIndex+.5)/stages.length)*100;
+        const from=(fromIndex/(stages.length-1))*100;
+        const to=(toIndex/(stages.length-1))*100;
         routePulse.getAnimations().forEach(animation=>animation.cancel());
         routePulse.animate([
           {left:`${from}%`,opacity:0,transform:"scale(.35)"},
@@ -732,6 +790,7 @@
         const commit=()=>{
           activeStage=id;
           routeShell.style.setProperty("--active",index);
+          routeShell.dataset.active=id;
           stagePanel.style.setProperty("--active",index);
           placeStagePanel(index);
           stageTabs.forEach((tab,tabIndex)=>{
@@ -820,7 +879,7 @@
       document.querySelectorAll("[data-open-view]").forEach(button=>button.addEventListener("click",()=>switchView(button.dataset.openView)));
       document.querySelectorAll("[data-method-link]").forEach(link=>link.addEventListener("click",()=>switchView("method",{updateHash:false,animate:false})));
       document.querySelectorAll("[data-disclosure]").forEach(details=>details.addEventListener("toggle",()=>{
-        if(details.open&&!reduce.matches)details.querySelector(".a-disclosure-body")?.animate([{opacity:0,transform:"translateY(-5px)",clipPath:"inset(0 0 30% 0)"},{opacity:1,transform:"none",clipPath:"inset(0)"}],{duration:260,easing:"cubic-bezier(.2,.75,.25,1)"});
+        if(details.open&&!reduce.matches)details.querySelector(".a-disclosure-body, .a-design-body")?.animate([{opacity:0,transform:"translateY(-5px)",clipPath:"inset(0 0 30% 0)"},{opacity:1,transform:"none",clipPath:"inset(0)"}],{duration:260,easing:"cubic-bezier(.2,.75,.25,1)"});
       }));
 
       const sections=[...document.querySelectorAll(".a-method-section")];
