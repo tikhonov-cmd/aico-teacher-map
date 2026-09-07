@@ -209,7 +209,6 @@
     .a-resources{margin:auto 0 0;padding:14px 0 0;border-top:1px solid var(--a-line-strong);border-left:0}
     .a-resources-head{margin-bottom:3px}
     .a-resources h2{font-size:12px}
-    .a-resources-placeholder{margin:0;color:var(--a-faint);font-size:11px;line-height:1.45;text-wrap:pretty}
     .a-resource-item{grid-template-columns:22px minmax(0,1fr);gap:7px;min-height:25px;font-size:10.5px}
     .a-method-hero{align-items:start;border-bottom:1px solid var(--a-ink)}
     .a-method-intro{display:grid;gap:22px}
@@ -583,8 +582,11 @@
                 </div>
               </article>
               <section class="a-resources" aria-labelledby="resources-title">
-                <div class="a-resources-head"><h2 id="resources-title">Полезные ссылки</h2></div>
-                <p class="a-resources-placeholder">Материалы и шаблоны скоро будут доступны.</p>
+                <div class="a-resources-head"><h2 id="resources-title">Полезные ссылки</h2><span class="a-resource-stage" id="resource-stage">P1</span></div>
+                <ol class="a-resource-list" id="resource-list">
+                  <li class="a-resource-item"><span class="a-resource-index">01</span><span>Чек-лист подготовки</span></li>
+                  <li class="a-resource-item"><span class="a-resource-index">02</span><span>Календарь курса</span></li>
+                </ol>
               </section>
             </div>
           </aside>
@@ -798,7 +800,8 @@
       const stageOverview=document.getElementById("stage-overview");
       const stagePanelHome=document.getElementById("stage-panel-home");
       const announcer=document.getElementById("stage-announcer");
-      const resourcesPanel=document.querySelector(".a-resources");
+      const resourceStage=document.getElementById("resource-stage");
+      const resourceList=document.getElementById("resource-list");
       const stageTabs=[...routeList.querySelectorAll("[data-stage]")];
       const viewTabs=[...document.querySelectorAll("[data-view]")];
       const viewIndicator=document.querySelector(".a-view-indicator");
@@ -814,6 +817,7 @@
       let resourcesAnimation=null;
 
       const listMarkup=items=>`<ul class="a-detail-list">${items.map(item=>`<li>${item}</li>`).join("")}</ul>`;
+      const resourceMarkup=items=>items.map((item,index)=>`<li class="a-resource-item"><span class="a-resource-index">${String(index+1).padStart(2,"0")}</span><span>${item}</span></li>`).join("");
       const overviewMarkup=stage=>`<div class="a-stage-overview-meta"><span class="a-stage-overview-code">${stage.code}</span><span class="a-stage-overview-status">${stage.status}</span></div><div class="a-stage-copy"><h2>${stage.overviewTitle||stage.title}</h2><p>${stage.summary}</p><p class="a-stage-explanation">${stage.explanation}</p></div>`;
       const panelMarkup=stage=>`<header class="a-detail-head"><h3 class="a-detail-title">${stage.title}</h3><p class="a-detail-summary">${stage.summary}</p><p class="a-detail-explanation">${stage.explanation}</p><div class="a-detail-meta"><span class="a-detail-status">${stage.status}</span></div></header><div class="a-detail-grid"><section class="a-detail-block"><h4>Что происходит</h4>${listMarkup(stage.context)}</section><section class="a-detail-block is-role"><h4>Ваша роль</h4>${listMarkup(stage.role)}</section><section class="a-detail-block"><h4>Что собираем</h4><p>${stage.data}</p></section><section class="a-detail-block"><h4>Дальше</h4><p>${stage.next}</p></section></div>`;
 
@@ -841,7 +845,7 @@
         fallbackAnimation=target.animate([{opacity:0},{opacity:1}],{duration:type==="stage"?420:320,easing:"cubic-bezier(.16,1,.3,1)"});
         if(type==="stage"){
           overviewAnimation=stageOverview.animate([{opacity:0},{opacity:1}],{duration:420,easing:"cubic-bezier(.16,1,.3,1)"});
-          resourcesAnimation=resourcesPanel.animate([{opacity:0},{opacity:1}],{duration:420,delay:50,easing:"cubic-bezier(.16,1,.3,1)",fill:"backwards"});
+          resourcesAnimation=resourceList.closest(".a-resources").animate([{opacity:0},{opacity:1}],{duration:420,delay:50,easing:"cubic-bezier(.16,1,.3,1)",fill:"backwards"});
         }
       }
 
@@ -889,6 +893,8 @@
           stageOverview.innerHTML=overviewMarkup(stage);
           stagePanel.innerHTML=panelMarkup(stage);
           stagePanel.setAttribute("aria-labelledby",`stage-tab-${id}`);
+          resourceStage.textContent=stage.code;
+          resourceList.innerHTML=resourceMarkup(stage.resources);
         };
         const changed=id!==activeStage||stagePanel.getAttribute("aria-labelledby")!==`stage-tab-${id}`;
         if(changed&&animate){withTransition(commit,"stage");}else commit();
