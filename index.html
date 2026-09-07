@@ -49,8 +49,9 @@
       --a-line:#d5d6d4;
       --a-line-strong:#aeb0b2;
       --a-blue:#2548c9;
+      --a-blue-wash:rgba(37,72,201,.035);
       --a-blue-dark:#1739ad;
-      --a-max:1440px;
+      --a-max:1180px;
       --a-fast:140ms;
       --a-motion:260ms;
       --a-ease:cubic-bezier(.2,.75,.25,1);
@@ -110,14 +111,7 @@
     .a-workbench{grid-column:2;grid-row:1/3;min-width:0;padding:28px 0 0 clamp(28px,4vw,62px)}
     .a-workbench-head{display:flex;align-items:baseline;justify-content:space-between;gap:24px;margin-bottom:20px}
     .a-workbench-head h2{margin:0;font-size:16px;font-weight:600;letter-spacing:-.02em}
-    .a-phase-band{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));margin-bottom:10px;color:var(--a-faint);font-size:10px;line-height:1.25;text-transform:uppercase;letter-spacing:.045em}
-    .a-phase{position:relative;padding:0 12px 9px 0;border-bottom:1px solid var(--a-line)}
-    .a-phase::after{position:absolute;right:0;bottom:-3px;width:1px;height:6px;background:var(--a-line-strong);content:""}
-    .a-phase:first-child::before{position:absolute;bottom:-3px;left:0;width:1px;height:6px;background:var(--a-line-strong);content:""}
-    .a-phase:nth-child(1){grid-column:1/3}
-    .a-phase:nth-child(2){grid-column:3/6;padding-left:12px}
-    .a-phase:nth-child(3){grid-column:6/7;padding-left:12px}
-    .a-mobile-phase,.a-stage-panel-home{display:none}
+    .a-stage-panel-home{display:none}
     .a-route-shell{--active:0;position:relative}
     .a-route-list{position:relative;display:grid;height:154px;grid-template-columns:repeat(6,minmax(0,1fr));margin:0;padding:0;list-style:none}
     .a-route-line{position:absolute;z-index:0;right:0;bottom:25px;left:0;height:1px;background:var(--a-ink);transform-origin:left}
@@ -128,25 +122,25 @@
     .a-route-stage:first-child .a-stage-tab{transform:none;text-align:left}
     .a-route-stage[data-stage-item="t3"] .a-stage-tab{width:100%;transform:none;text-align:right}
     .a-stage-label{display:block;align-self:start;min-width:0;padding-top:14px}
-    .a-stage-code{display:block;margin-bottom:5px;color:var(--a-ink);font-size:17px;font-weight:500;font-variant-numeric:tabular-nums;transition:color 220ms ease,transform 220ms var(--a-ease)}
+    .a-stage-code{display:block;margin-bottom:5px;color:var(--a-ink);font-size:17px;font-weight:500;font-variant-numeric:tabular-nums;transition:color 320ms ease}
     .a-stage-name{display:block;max-width:15ch;margin:0;color:var(--a-soft);font-size:12px;line-height:1.32;text-wrap:balance;transition:color 220ms ease}
     .a-route-stage:first-child .a-stage-name{margin-left:0}
     .a-route-stage[data-stage-item="t3"] .a-stage-name{margin-right:0}
     .a-stage-node-wrap{display:flex;height:50px;align-items:center;justify-content:flex-start}
     .a-route-stage:first-child .a-stage-node-wrap{justify-content:flex-start}
     .a-route-stage[data-stage-item="t3"] .a-stage-node-wrap{justify-content:flex-end}
-    .a-stage-node{display:block;width:15px;height:15px;border:1px solid var(--a-ink);border-radius:50%;background:var(--a-paper);transform-origin:center;transition:background 220ms ease,border-color 220ms ease,transform 220ms var(--a-ease)}
+    .a-stage-node{display:block;width:15px;height:15px;border:1px solid var(--a-ink);border-radius:50%;background:var(--a-paper);transition:background 320ms ease,border-color 320ms ease}
     .a-route-stage.is-active .a-stage-code,.a-route-stage.is-active .a-stage-name{color:var(--a-blue)}
-    .a-route-stage.is-active .a-stage-node{border-color:var(--a-blue);background:var(--a-blue);transform:scale(1.08)}
-    .a-route-cursor{position:absolute;z-index:1;top:2px;left:calc(var(--active) * 16.6666667%);width:16.6666667%;height:152px;pointer-events:none;transition:left var(--a-motion) var(--a-ease)}
+    .a-route-stage.is-active .a-stage-node{border-color:var(--a-blue);background:var(--a-blue)}
+    .a-route-cursor{position:absolute;z-index:1;top:2px;left:calc(var(--active) * 16.6666667%);width:16.6666667%;height:152px;pointer-events:none}
     .a-route-cursor::before{position:absolute;inset:2px 4px 0;border:1px solid var(--a-blue);content:"";clip-path:polygon(0 0,16px 0,16px 1px,calc(100% - 16px) 1px,calc(100% - 16px) 0,100% 0,100% 100%,calc(100% - 16px) 100%,calc(100% - 16px) calc(100% - 1px),16px calc(100% - 1px),16px 100%,0 100%)}
-    .a-route-pulse{position:absolute;z-index:7;top:125px;left:0;width:8px;height:8px;margin-left:-4px;border-radius:50%;background:var(--a-blue);box-shadow:-9px 0 0 -2px rgba(37,72,201,.35);opacity:0;pointer-events:none}
-    .a-stage-panel{position:relative;min-height:344px;view-transition-name:aico-stage-detail}
-    .a-detail-head{display:grid;grid-template-columns:110px minmax(0,1fr) minmax(150px,.34fr);grid-template-areas:"code title meta" "code summary meta";column-gap:24px;row-gap:9px;align-items:start;padding:30px 0 26px}
-    .a-detail-code{grid-area:code;align-self:center;justify-self:center;color:var(--a-blue);font-size:clamp(62px,6vw,90px);font-weight:400;font-variant-numeric:tabular-nums;letter-spacing:-.055em;line-height:.8}
-    .a-detail-title{grid-area:title;margin:0;font-size:clamp(30px,3vw,46px);font-weight:500;letter-spacing:-.04em;line-height:1.02;text-wrap:balance}
+    .a-stage-panel{position:relative;min-height:344px;margin-top:20px;border-top:1px solid var(--a-line);view-transition-name:aico-stage-detail}
+    .a-stage-panel::before{position:absolute;top:-1px;left:calc(var(--active) * 16.6666667% + 4px);width:calc(16.6666667% - 8px);height:2px;background:var(--a-blue);content:"";transition:left var(--a-motion) var(--a-ease)}
+    .a-detail-head{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"title meta" "summary meta" "explanation meta";column-gap:32px;row-gap:10px;align-items:start;padding:26px 16px 26px}
+    .a-detail-title{grid-area:title;margin:0;font-size:clamp(38px,3.4vw,52px);font-weight:500;letter-spacing:-.04em;line-height:1.02;text-wrap:balance}
     .a-detail-summary{grid-area:summary;max-width:58ch;margin:0;color:var(--a-soft);font-size:13px;line-height:1.5;text-wrap:pretty}
-    .a-detail-meta{grid-area:meta;display:grid;gap:7px;justify-items:start;padding-top:3px;color:var(--a-faint);font-size:11px;line-height:1.4;text-transform:uppercase;letter-spacing:.04em}
+    .a-detail-explanation{grid-area:explanation;max-width:58ch;margin:0;padding-top:10px;border-top:1px solid var(--a-line);color:var(--a-faint);font-size:13px;line-height:1.5;text-wrap:pretty}
+    .a-detail-meta{grid-area:meta;display:grid;gap:7px;justify-self:end;justify-items:end;padding-top:3px;color:var(--a-faint);font-size:11px;line-height:1.4;text-align:right;text-transform:uppercase;letter-spacing:.04em}
     .a-detail-status{color:var(--a-blue);font-weight:600}
     .a-detail-grid{display:grid;grid-template-columns:1fr 1.28fr 1fr .82fr;border-top:1px solid var(--a-line)}
     .a-detail-block{min-width:0;padding:22px 20px 28px 0}
@@ -154,19 +148,68 @@
     .a-detail-block h4{margin:0 0 15px;color:var(--a-soft);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.035em}
     .a-detail-block.is-role h4{color:var(--a-blue)}
     .a-detail-block.is-role{position:relative}
-    .a-detail-block.is-role::before{position:absolute;top:-1px;right:0;left:0;height:2px;background:var(--a-blue);content:"";transform-origin:left;animation:a-role-draw 420ms var(--a-ease) both}
+    .a-detail-block.is-role::before{position:absolute;top:-1px;right:0;left:0;height:2px;background:var(--a-blue);content:""}
     .a-detail-list{display:grid;gap:9px;margin:0;padding:0;list-style:none}
     .a-detail-list li{position:relative;padding-left:15px;color:var(--a-soft);font-size:12px;line-height:1.48;text-wrap:pretty}
     .a-detail-list li::before{position:absolute;top:.72em;left:0;width:7px;height:1px;background:var(--a-line-strong);content:""}
     .a-detail-block.is-role .a-detail-list li{color:var(--a-ink)}
     .a-detail-block.is-role .a-detail-list li::before{background:var(--a-blue)}
     .a-detail-block>p{margin:0;color:var(--a-soft);font-size:12px;line-height:1.52;text-wrap:pretty}
-    .a-route-footer{display:flex;grid-column:1/-1;grid-row:3;align-items:center;justify-content:flex-end;padding:22px 0 24px;border-top:1px solid var(--a-line-strong)}
-    .a-text-action{display:inline-flex;flex:none;gap:11px;align-items:center;padding:0 0 4px;border:0;border-bottom:1px solid currentColor;background:transparent;color:var(--a-blue);font-size:14px;font-weight:600;cursor:pointer}
-    .a-arrow{position:relative;width:18px;height:8px;transition:transform 220ms var(--a-ease)}
-    .a-arrow::before{position:absolute;top:4px;right:0;left:0;height:1px;background:currentColor;content:""}
-    .a-arrow::after{position:absolute;top:1px;right:0;width:6px;height:6px;border-top:1px solid currentColor;border-right:1px solid currentColor;content:"";transform:rotate(45deg)}
-    .a-text-action:hover .a-arrow{transform:translateX(4px)}
+    /* Route — compact one-screen ledger */
+    .a-route-hero{grid-template-columns:minmax(340px,.82fr) minmax(0,1.18fr);gap:clamp(36px,5vw,64px);align-items:center;padding:14px 0 15px}
+    .a-route-hero .a-title{max-width:13ch;font-size:clamp(44px,4vw,58px);line-height:.96}
+    .a-route-hero .a-title span{display:block}
+    .a-route-hero .a-hero-copy{grid-template-columns:minmax(0,1fr) minmax(180px,.58fr);gap:18px;align-items:start;padding:0}
+    .a-route-hero .a-hero-copy p{font-size:13px;line-height:1.42}
+    .a-route-hero .a-hero-copy .a-hero-note{padding:0 0 0 18px;border-top:0;border-left:1px solid var(--a-line);font-size:10px;line-height:1.38}
+    .a-ledger{grid-template-columns:minmax(340px,33%) minmax(0,67%);grid-template-rows:auto auto;grid-template-areas:"overview workbench" "overview duties"}
+    .a-contract{grid-area:overview;border-right:1px solid var(--a-line-strong)}
+    .a-contract-inner{display:flex;height:100%;flex-direction:column;padding:20px clamp(24px,3vw,44px) 18px 0}
+    .a-stage-overview{display:grid;align-content:start;gap:10px}
+    .a-stage-overview-meta{display:flex;height:28px;align-items:baseline;justify-content:flex-start;gap:14px;color:var(--a-blue);font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+    .a-stage-overview-code{font-size:15px;letter-spacing:0;font-variant-numeric:tabular-nums}
+    .a-stage-overview-status{max-width:none;color:var(--a-blue);font-size:10px;line-height:1.35;text-align:left;white-space:nowrap}
+    .a-stage-copy{display:grid;min-height:230px;align-content:start;gap:10px}
+    .a-stage-overview h2{display:block;height:auto;min-height:2.02em;max-width:15ch;margin:0;font-size:clamp(34px,3vw,44px);font-weight:500;letter-spacing:-.04em;line-height:1.01;text-wrap:balance}
+    .a-stage-overview p{max-width:36ch;margin:0;color:var(--a-soft);font-size:12px;line-height:1.45;text-wrap:pretty}
+    .a-stage-overview .a-stage-explanation{padding-top:12px;border-top:1px solid var(--a-line);color:var(--a-faint);font-size:11px;line-height:1.5}
+    .a-workbench{grid-area:workbench;padding:17px 0 0 clamp(28px,4vw,62px)}
+    .a-workbench-head{margin-bottom:5px}
+    .a-workbench-head h2{font-size:14px}
+    .a-route-list{height:116px}
+    .a-route-line{bottom:18px}
+    .a-stage-tab{grid-template-rows:minmax(0,1fr) 38px;padding:0 12px}
+    .a-stage-label{padding-top:9px}
+    .a-stage-code{margin-bottom:3px;font-size:15px}
+    .a-stage-name{font-size:11px;line-height:1.26}
+    .a-stage-node-wrap{height:38px}
+    .a-stage-node{width:13px;height:13px}
+    .a-route-cursor{top:0;height:114px}
+    .a-stage-panel{min-height:190px;margin-top:15px;border-top:0}
+    .a-stage-panel::before{display:none}
+    .a-stage-panel>.a-detail-head{display:none}
+    .a-stage-panel>.a-detail-grid{min-height:190px}
+    .a-detail-grid{grid-template-columns:1fr 1.28fr 1fr .82fr}
+    .a-detail-block{padding:13px 14px 16px 0}
+    .a-detail-block+.a-detail-block{padding-left:14px}
+    .a-detail-block.is-role{padding-right:20px;padding-left:20px}
+    .a-detail-block.is-role::before{right:20px;left:20px}
+    .a-detail-block h4{margin-bottom:8px;font-size:10px}
+    .a-detail-list{gap:5px}
+    .a-detail-list li{padding-left:11px;font-size:11px;line-height:1.34}
+    .a-detail-list li::before{width:5px}
+    .a-detail-block>p{font-size:11px;line-height:1.38}
+    .a-duty-panel{grid-area:duties;padding:18px 0 0;border-top:0;border-right:0}
+    .a-duties{display:grid;grid-template-columns:calc(clamp(28px,4vw,62px) + 116px) minmax(0,1fr);align-items:start;padding:14px 16px 14px 0;border-top:1px solid rgba(37,72,201,.16);background:var(--a-blue-wash)}
+    .a-duties>h2{align-self:center;margin:0;padding:0 18px 0 clamp(28px,4vw,62px);color:var(--a-blue);font-size:10px;font-weight:600;line-height:1.35;letter-spacing:.035em;text-transform:uppercase}
+    .a-duty-list{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(18px,2.2vw,30px)}
+    .a-duty{grid-template-columns:18px minmax(0,1fr);gap:7px;align-items:center;min-height:0;padding:0;border:0}
+    .a-duty-number{color:var(--a-blue);font-size:10px;font-weight:600;line-height:1.35;letter-spacing:.04em}
+    .a-duty-copy{color:var(--a-faint);font-size:10px;line-height:1.35}
+    .a-resources{margin:auto 0 0;padding:14px 0 0;border-top:1px solid var(--a-line-strong);border-left:0}
+    .a-resources-head{margin-bottom:3px}
+    .a-resources h2{font-size:12px}
+    .a-resource-item{grid-template-columns:22px minmax(0,1fr);gap:7px;min-height:25px;font-size:10.5px}
     .a-method-hero{align-items:start;border-bottom:1px solid var(--a-ink)}
     .a-method-intro{display:grid;gap:22px}
     .a-method-intro>p{max-width:52ch;margin:0;color:var(--a-soft);font-size:16px;line-height:1.55}
@@ -236,7 +279,7 @@
     .a-faq{border-bottom:1px solid var(--a-line)}
     .a-faq summary{padding:18px 40px 18px 0;font-size:16px;font-weight:600;line-height:1.4;text-wrap:pretty}
     .a-faq .a-disclosure-body{display:block;max-width:76ch;padding:0 40px 22px 0}
-    .a-view-tab:focus-visible,.a-stage-tab:focus-visible,.a-text-action:focus-visible,.a-method-index a:focus-visible,.a-design-row summary:focus-visible,.a-measure summary:focus-visible,.a-faq summary:focus-visible{outline:2px solid var(--a-blue);outline-offset:4px}
+    .a-view-tab:focus-visible,.a-stage-tab:focus-visible,.a-method-index a:focus-visible,.a-design-row summary:focus-visible,.a-measure summary:focus-visible,.a-faq summary:focus-visible{outline:2px solid var(--a-blue);outline-offset:4px}
     ::view-transition-old(root),::view-transition-new(root){animation:none}
     ::view-transition-group(aico-view-title),::view-transition-group(aico-view-intro),::view-transition-group(aico-view-body){animation-duration:420ms;animation-timing-function:var(--a-ease)}
     ::view-transition-old(aico-view-title){animation:a-view-title-out 160ms ease both}
@@ -251,30 +294,63 @@
     @keyframes a-view-title-in{from{opacity:0;transform:translateY(22px);clip-path:inset(58% 0 0 0)}}
     @keyframes a-view-body-out{to{opacity:0;transform:translateY(-8px);clip-path:inset(0 0 18% 0)}}
     @keyframes a-view-body-in{from{opacity:0;transform:translateY(18px);clip-path:inset(12% 0 0 0)}}
-    @keyframes a-role-draw{from{transform:scaleX(0)}to{transform:scaleX(1)}}
     @keyframes a-line-draw{from{transform:scaleX(0)}to{transform:scaleX(1)}}
     @media(hover:hover) and (pointer:fine){
       .a-stage-tab:hover .a-stage-code{color:var(--a-blue)}
       .a-stage-tab:hover .a-stage-name{color:var(--a-ink)}
-      .a-stage-tab:hover .a-stage-node{border-color:var(--a-blue);transform:scale(1.18)}
+      .a-stage-tab:hover .a-stage-node{border-color:var(--a-blue)}
+    }
+    @media(min-width:1500px) and (min-height:820px){
+      :root{--a-max:1320px}
+      .a-viewbar-inner{min-height:66px}
+      .a-route-hero{grid-template-columns:minmax(420px,.82fr) minmax(0,1.18fr);padding:24px 0 25px}
+      .a-route-hero .a-title{font-size:68px;line-height:.94}
+      .a-route-hero .a-hero-copy p{font-size:14px;line-height:1.48}
+      .a-route-hero .a-hero-copy .a-hero-note{font-size:11px;line-height:1.44}
+      .a-ledger{grid-template-columns:minmax(420px,32%) minmax(0,68%)}
+      .a-contract-inner{padding:26px clamp(30px,3vw,48px) 24px 0}
+      .a-stage-overview{gap:12px}
+      .a-stage-overview-meta{height:32px}
+      .a-stage-overview-code{font-size:17px}
+      .a-stage-overview-status{font-size:11px}
+      .a-stage-copy{min-height:255px;gap:12px}
+      .a-stage-overview h2{font-size:50px;line-height:1}
+      .a-stage-overview p{font-size:13px;line-height:1.5}
+      .a-workbench{padding:22px 0 0 clamp(32px,4vw,64px)}
+      .a-workbench-head{margin-bottom:8px}
+      .a-workbench-head h2{font-size:16px}
+      .a-route-list{height:136px}
+      .a-route-line{bottom:22px}
+      .a-stage-tab{grid-template-rows:minmax(0,1fr) 46px;padding-inline:14px}
+      .a-stage-label{padding-top:12px}
+      .a-stage-code{font-size:18px}
+      .a-stage-name{font-size:12.5px;line-height:1.3}
+      .a-stage-node-wrap{height:46px}
+      .a-route-cursor{height:134px}
+      .a-stage-panel,.a-stage-panel>.a-detail-grid{min-height:240px}
+      .a-detail-block{padding:17px 18px 21px 0}
+      .a-detail-block+.a-detail-block{padding-left:18px}
+      .a-detail-block.is-role{padding-right:24px;padding-left:24px}
+      .a-detail-block.is-role::before{right:24px;left:24px}
+      .a-detail-block h4{margin-bottom:11px;font-size:11px}
+      .a-detail-list{gap:7px}
+      .a-detail-list li,.a-detail-block>p{font-size:12px;line-height:1.42}
+      .a-duty-panel{padding-top:20px}
+      .a-duties{grid-template-columns:calc(clamp(32px,4vw,64px) + 126px) minmax(0,1fr);padding:16px 18px 16px 0}
+      .a-duties>h2{padding-left:clamp(32px,4vw,64px)}
+      .a-duties>h2{padding-top:0;font-size:13px}
+      .a-duty{grid-template-columns:20px minmax(0,1fr);gap:8px;align-items:center;min-height:0;padding:0}
+      .a-duty-number{font-size:11px}
+      .a-duty-copy{font-size:11px;line-height:1.38}
+      .a-resources{margin-top:auto;padding-top:16px}
+      .a-resources h2{font-size:13px}
+      .a-resource-item{min-height:32px;font-size:11.5px}
     }
     @media(max-width:1100px){
-      .a-route-hero,.a-method-hero{grid-template-columns:1fr;gap:26px}
-      .a-hero-copy{grid-template-columns:minmax(0,1fr) minmax(260px,.58fr);gap:28px;align-items:start}
-      .a-ledger{grid-template-columns:1fr;grid-template-rows:auto auto auto auto}
-      .a-contract{grid-column:1;grid-row:1;border-right:0;border-bottom:1px solid var(--a-line-strong)}
-      .a-contract-inner{position:static;padding:28px 0}
-      .a-workbench{grid-column:1;grid-row:2}
-      .a-duty-panel{grid-column:1;grid-row:3;padding:0 0 28px;border-top:1px solid var(--a-line-strong);border-right:0}
-      .a-route-footer{grid-column:1;grid-row:4}
-      .a-preflight{grid-template-columns:80px minmax(0,1fr);padding-bottom:24px}
-      .a-preflight h2{max-width:none}
-      .a-preflight p{max-width:62ch}
-      .a-duty-list{display:grid;grid-template-columns:1fr 1fr}
-      .a-duty:nth-child(odd){padding-right:24px;border-right:1px solid var(--a-line)}
-      .a-duty:nth-child(even){padding-left:24px}
-      .a-duty:nth-last-child(-n+2){border-bottom:0}
-      .a-workbench{padding:28px 0 0}
+      .a-method-hero{grid-template-columns:1fr;gap:26px}
+      .a-route-hero{grid-template-columns:minmax(0,1.1fr) minmax(340px,.9fr)}
+      .a-route-hero .a-hero-copy{grid-template-columns:1fr;gap:7px}
+      .a-route-hero .a-hero-copy .a-hero-note{padding:7px 0 0;border-top:1px solid var(--a-line);border-left:0}
       .a-method-layout{grid-template-columns:1fr}
       .a-method-index{position:sticky;z-index:20;top:62px;overflow-x:auto;border-right:0;border-bottom:1px solid var(--a-line-strong);background:rgba(247,247,243,.97);scrollbar-width:none}
       .a-method-index::-webkit-scrollbar{display:none}
@@ -287,6 +363,37 @@
       .a-method-index a:hover,.a-method-index a.is-current{transform:none}
       .a-method-content{padding-left:0}
     }
+    @media(min-width:1021px) and (max-width:1100px){
+      .a-stage-panel,.a-stage-panel>.a-detail-grid{min-height:240px}
+    }
+    @media(max-width:1020px){
+      .a-route-hero{grid-template-columns:1fr;gap:18px}
+      .a-route-hero .a-hero-copy{grid-template-columns:minmax(0,1fr) minmax(250px,.58fr);gap:24px}
+      .a-route-hero .a-hero-copy .a-hero-note{padding:0 0 0 18px;border-top:0;border-left:1px solid var(--a-line)}
+      .a-ledger{grid-template-columns:1fr;grid-template-rows:auto auto auto;grid-template-areas:"overview" "workbench" "duties"}
+      .a-contract{border-right:0;border-bottom:1px solid var(--a-line-strong)}
+      .a-contract-inner{position:static;padding:18px 0}
+      .a-stage-overview{grid-template-columns:1fr;grid-template-areas:"meta" "copy";gap:8px}
+      .a-stage-overview-meta{grid-area:meta}
+      .a-stage-copy{grid-area:copy;display:grid;grid-template-columns:minmax(260px,.48fr) minmax(0,1fr);min-height:0;gap:14px 32px}
+      .a-stage-overview h2{display:block;height:auto;min-height:0;max-width:none}
+      .a-stage-overview p{max-width:56ch;padding-top:3px}
+      .a-stage-overview .a-stage-explanation{grid-column:2;padding-top:10px}
+      .a-workbench{padding:20px 0 0}
+      .a-duty-panel{padding:18px 0 24px}
+      .a-duties{display:block}
+      .a-duties{padding:16px 18px}
+      .a-duties>h2{padding:0 0 12px;font-size:11px}
+      .a-duty-list{display:grid;grid-template-columns:1fr 1fr}
+      .a-duty{grid-template-columns:44px minmax(0,1fr);gap:10px;align-items:center;min-height:55px;padding:0;border-left:0;border-bottom:1px solid var(--a-line)}
+      .a-duty:nth-child(odd){padding-right:24px;border-right:1px solid var(--a-line)}
+      .a-duty:nth-child(even){padding-left:24px}
+      .a-duty:nth-last-child(-n+2){border-bottom:0}
+      .a-duty-number{font-size:24px}
+      .a-duty-copy{font-size:12px;line-height:1.3}
+      .a-resources{margin-top:20px;padding:14px 0 0;border-top:1px solid var(--a-line-strong);border-left:0}
+      .a-resource-item{min-height:32px;font-size:11px}
+    }
     @media(max-width:740px){
       .a-page{width:calc(100% - 30px)}
       .a-viewbar-inner{min-height:56px;gap:16px}
@@ -296,6 +403,13 @@
       .a-view-tab{white-space:nowrap;font-size:14px}
       .a-view-hint{display:none}
       .a-route-hero,.a-method-hero{padding:34px 0 32px}
+      .a-route-hero .a-hero-copy{grid-template-columns:1fr;gap:14px}
+      .a-route-hero .a-hero-copy .a-hero-note{padding:10px 0 0;border-top:1px solid var(--a-line);border-left:0}
+      .a-ledger{grid-template-rows:auto auto auto;grid-template-areas:"workbench" "duties" "overview"}
+      .a-contract{display:block;border-right:0;border-bottom:0}
+      .a-contract-inner{padding:0 0 20px}
+      .a-stage-overview{display:none}
+      .a-contract .a-resources{margin-top:0}
       .a-title{font-size:clamp(43px,12vw,60px);line-height:1}
       .a-hero-copy{display:grid;grid-template-columns:1fr;gap:16px}
       .a-hero-copy p{font-size:14px}
@@ -305,11 +419,9 @@
       .a-duty:nth-child(odd),.a-duty:nth-child(even){padding-inline:0;border-right:0}
       .a-duty:nth-last-child(2){border-bottom:1px solid var(--a-line)}
       .a-workbench-head{margin-bottom:16px}
-      .a-phase-band{display:none}
-      .a-mobile-phase{display:block;padding:18px 0 5px 46px;color:var(--a-faint);font-size:10px;line-height:1.3;text-transform:uppercase;letter-spacing:.045em}
       .a-route-list{display:grid;height:auto;grid-template-columns:1fr;justify-content:stretch;padding:8px 0}
       .a-route-list::before{position:absolute;top:61px;bottom:38px;left:17px;width:1px;background:var(--a-line-strong);content:""}
-      .a-route-line,.a-route-cursor,.a-route-pulse{display:none}
+      .a-route-line,.a-route-cursor{display:none}
       .a-route-stage{width:auto;min-height:64px;flex:none;overflow:visible}
       .a-stage-tab,.a-route-stage:first-child .a-stage-tab,.a-route-stage[data-stage-item="t2"] .a-stage-tab,.a-route-stage[data-stage-item="t3"] .a-stage-tab{width:100%;height:64px;grid-template-columns:36px minmax(0,1fr);grid-template-rows:1fr;gap:10px;align-items:center;padding:0 12px 0 0;text-align:left;transform:none}
       .a-route-stage.is-active .a-stage-tab::before{position:absolute;z-index:0;inset:4px 0;border:1px solid var(--a-blue);content:"";clip-path:polygon(0 0,14px 0,14px 1px,calc(100% - 14px) 1px,calc(100% - 14px) 0,100% 0,100% 100%,calc(100% - 14px) 100%,calc(100% - 14px) calc(100% - 1px),14px calc(100% - 1px),14px 100%,0 100%)}
@@ -319,18 +431,17 @@
       .a-stage-name,.a-route-stage:first-child .a-stage-name,.a-route-stage[data-stage-item="t3"] .a-stage-name{max-width:none;margin:0;font-size:14px}
       .a-stage-node-wrap,.a-route-stage:first-child .a-stage-node-wrap,.a-route-stage[data-stage-item="t3"] .a-stage-node-wrap{grid-column:1;grid-row:1;height:auto;justify-content:center;transform:none}
       .a-stage-node{width:13px;height:13px}
-      .a-route-stage>.a-stage-panel{z-index:3;min-height:0;margin:10px 0 20px 36px;background:var(--a-paper)}
-      .a-detail-head{grid-template-columns:72px minmax(0,1fr);grid-template-areas:"code title" ". summary" ". meta";column-gap:18px;row-gap:9px;padding:27px 0 23px}
-      .a-detail-code{font-size:56px}
+      .a-route-stage>.a-stage-panel{z-index:3;min-height:0;margin:16px 0 20px 36px;background:var(--a-paper)}
+      .a-stage-panel>.a-detail-grid{min-height:0}
+      .a-stage-panel::before{left:0;width:56px}
+      .a-stage-panel>.a-detail-head{display:grid;grid-template-columns:1fr;grid-template-areas:"title" "summary" "explanation" "meta";row-gap:9px;padding:24px 0 23px}
       .a-detail-title{font-size:31px}
-      .a-detail-meta{display:flex;flex-wrap:wrap;gap:8px 14px;padding:0}
+      .a-detail-meta{display:flex;flex-wrap:wrap;gap:8px 14px;justify-self:start;padding:0;text-align:left}
       .a-detail-grid{grid-template-columns:1fr 1fr}
       .a-detail-block{padding:20px 18px 23px 0;border-bottom:1px solid var(--a-line)}
       .a-detail-block+.a-detail-block{padding-left:18px}
       .a-detail-block:nth-child(odd){padding-left:0;border-left:0}
       .a-detail-block.is-role{order:-1}
-      .a-route-footer{justify-content:flex-start}
-      .a-text-action{justify-self:start}
       .a-status-key{grid-template-columns:1fr}
       .a-status-key span:nth-child(even){padding-left:0;border-left:0}
       .a-section-head{grid-template-columns:1fr;gap:18px;margin-bottom:27px}
@@ -351,17 +462,15 @@
     }
     @media(max-width:520px){
       .a-view-tabs{gap:20px}
-      .a-detail-head{grid-template-columns:58px minmax(0,1fr);grid-template-areas:"code title" "summary summary" "meta meta";column-gap:14px}
-      .a-detail-code{font-size:50px}
+      .a-detail-head{grid-template-columns:1fr;grid-template-areas:"title" "summary" "explanation" "meta"}
       .a-detail-grid{grid-template-columns:1fr}
       .a-detail-block,.a-detail-block+.a-detail-block,.a-detail-block:nth-child(odd){padding:18px 0;border-left:0;border-bottom:1px solid var(--a-line)}
       .a-detail-block:last-child{border-bottom:0}
-      .a-route-footer{padding-bottom:34px}
       .a-disclosure-body{padding-left:0}
     }
     @media(prefers-reduced-motion:reduce){
       html{scroll-behavior:auto}
-      .a-view-indicator,.a-stage-code,.a-stage-name,.a-stage-node,.a-route-cursor,.a-route-pulse,.a-text-action .a-arrow,.a-method-index a,.a-disclosure-mark{animation:none!important;transition:none!important}
+      .a-view-indicator,.a-stage-code,.a-stage-name,.a-stage-node,.a-route-cursor,.a-method-index a,.a-disclosure-mark{animation:none!important;transition:none!important}
       .a-detail-block.is-role::before{animation:none!important}
       ::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}
     }
@@ -454,7 +563,7 @@
     <main>
       <section id="view-route" role="tabpanel" aria-labelledby="view-tab-route">
         <header class="a-page a-route-hero">
-          <h1 class="a-title">Маршрут преподавателя</h1>
+          <h1 class="a-title"><span>Маршрут</span> <span>преподавателя</span></h1>
           <div class="a-hero-copy">
             <p><strong>AICO</strong> — ИИ-компаньон, который работает с материалами курса. Здесь — общий путь исследования и моменты, когда потребуется ваше участие.</p>
             <p class="a-hero-note">Точные даты всех точек привязываются к календарю дисциплины. Необходимость T1 и возможность T3 подтверждаются отдельно для каждого курса.</p>
@@ -462,16 +571,23 @@
         </header>
 
         <section class="a-page a-ledger" aria-labelledby="route-title">
-          <aside class="a-contract" aria-label="Роль преподавателя">
+          <aside class="a-contract" aria-label="Выбранная контрольная точка">
             <div class="a-contract-inner">
-              <div class="a-preflight">
-                <div class="a-preflight-code">До P1</div>
-                <div>
-                  <h2>Подготовьте курс к старту</h2>
-                  <p>Пройдите короткий онбординг и согласуйте календарь, учебные цели, тестовые задания и роли до первой контрольной точки.</p>
+              <article class="a-stage-overview" id="stage-overview">
+                <div class="a-stage-overview-meta"><span class="a-stage-overview-code">P1</span><span class="a-stage-overview-status">Зафиксировано</span></div>
+                <div class="a-stage-copy">
+                  <h2>Старт<br> курса</h2>
+                  <p>Курс начинается по обычной программе; согласованная схема исследования становится рабочей.</p>
+                  <p class="a-stage-explanation">До выдачи доступа фиксируются состав и группы, доступные показатели подготовки и календарь курса. Это задаёт общий контекст, с которым позже сопоставляются результаты.</p>
                 </div>
-              </div>
-
+              </article>
+              <section class="a-resources" aria-labelledby="resources-title">
+                <div class="a-resources-head"><h2 id="resources-title">Полезные ссылки</h2><span class="a-resource-stage" id="resource-stage">P1</span></div>
+                <ol class="a-resource-list" id="resource-list">
+                  <li class="a-resource-item"><span class="a-resource-index">01</span><span>Чек-лист подготовки</span></li>
+                  <li class="a-resource-item"><span class="a-resource-index">02</span><span>Календарь курса</span></li>
+                </ol>
+              </section>
             </div>
           </aside>
 
@@ -480,16 +596,9 @@
               <h2 id="route-title">Контрольные точки</h2>
             </div>
 
-            <div class="a-phase-band" aria-label="Фазы между контрольными точками">
-              <span class="a-phase">До доступа к AICO</span>
-              <span class="a-phase">Период работы с AICO</span>
-              <span class="a-phase">После основного периода</span>
-            </div>
-
             <div class="a-route-shell" id="route-shell" data-active="p1" style="--active:0">
               <ol class="a-route-list" id="route-list" role="tablist" aria-label="Шесть контрольных точек" aria-orientation="horizontal">
                 <li class="a-route-stage is-active" data-stage-item="p1">
-                  <span class="a-mobile-phase">До доступа к AICO</span>
                   <button class="a-stage-tab" id="stage-tab-p1" type="button" role="tab" aria-selected="true" aria-controls="stage-panel" tabindex="0" data-stage="p1">
                     <span class="a-stage-label"><span class="a-stage-code">P1</span><span class="a-stage-name">Старт курса</span></span><span class="a-stage-node-wrap"><span class="a-stage-node" aria-hidden="true"></span></span>
                   </button>
@@ -500,7 +609,6 @@
                   </button>
                 </li>
                 <li class="a-route-stage" data-stage-item="r">
-                  <span class="a-mobile-phase">Период работы с AICO</span>
                   <button class="a-stage-tab" id="stage-tab-r" type="button" role="tab" aria-selected="false" aria-controls="stage-panel" tabindex="-1" data-stage="r">
                     <span class="a-stage-label"><span class="a-stage-code">R</span><span class="a-stage-name">Начало работы с AICO</span></span><span class="a-stage-node-wrap"><span class="a-stage-node" aria-hidden="true"></span></span>
                   </button>
@@ -516,22 +624,20 @@
                   </button>
                 </li>
                 <li class="a-route-stage" data-stage-item="t3">
-                  <span class="a-mobile-phase">После основного периода</span>
                   <button class="a-stage-tab" id="stage-tab-t3" type="button" role="tab" aria-selected="false" aria-controls="stage-panel" tabindex="-1" data-stage="t3">
                     <span class="a-stage-label"><span class="a-stage-code">T3</span><span class="a-stage-name">Пост-тест</span></span><span class="a-stage-node-wrap"><span class="a-stage-node" aria-hidden="true"></span></span>
                   </button>
                 </li>
                 <li class="a-route-line" role="presentation" aria-hidden="true"></li>
               </ol>
-              <span class="a-route-pulse" id="route-pulse" aria-hidden="true"></span>
               <div class="a-route-cursor" aria-hidden="true"></div>
               <span class="a-stage-panel-home" id="stage-panel-home" aria-hidden="true"></span>
 
               <article class="a-stage-panel" id="stage-panel" role="tabpanel" aria-labelledby="stage-tab-p1" tabindex="0">
                 <header class="a-detail-head">
-                  <div class="a-detail-code">P1</div>
                   <h3 class="a-detail-title">Старт курса</h3>
                   <p class="a-detail-summary">Курс начинается по обычной программе; согласованная схема исследования становится рабочей.</p>
+                  <p class="a-detail-explanation">До выдачи доступа фиксируются состав и группы, доступные показатели подготовки и календарь курса. Это задаёт общий контекст, с которым позже сопоставляются результаты.</p>
                   <div class="a-detail-meta"><span class="a-detail-status">Зафиксировано</span></div>
                 </header>
                 <div class="a-detail-grid">
@@ -553,19 +659,9 @@
                 <li class="a-duty"><span class="a-duty-number">03</span><span class="a-duty-copy">Не меняйте назначенные условия доступа</span></li>
                 <li class="a-duty"><span class="a-duty-number">04</span><span class="a-duty-copy">Фиксируйте отклонения и инциденты</span></li>
               </ol>
-              <section class="a-resources" aria-labelledby="resources-title">
-                <div class="a-resources-head"><h2 id="resources-title">Полезные ссылки</h2><span class="a-resource-stage" id="resource-stage">P1</span></div>
-                <ol class="a-resource-list" id="resource-list">
-                  <li class="a-resource-item"><span class="a-resource-index">01</span><span>Чек-лист подготовки</span></li>
-                  <li class="a-resource-item"><span class="a-resource-index">02</span><span>Календарь курса</span></li>
-                </ol>
-              </section>
             </div>
           </aside>
 
-          <div class="a-route-footer">
-            <button class="a-text-action" type="button" data-open-view="method">Открыть метод, анкеты и шкалы<span class="a-arrow" aria-hidden="true"></span></button>
-          </div>
         </section>
       </section>
 
@@ -689,19 +785,19 @@
   <script>
     (()=>{
       const stages=[
-        {id:"p1",code:"P1",title:"Старт курса",status:"Зафиксировано",time:"На старте курса",summary:"Курс начинается по обычной программе; согласованная схема исследования становится рабочей.",context:["Студенты начинают обучение в обычном режиме.","Команда сверяет состав групп и календарь."],role:["Пройдите короткий онбординг по процедуре и работе с AICO.","Ведите курс по обычной программе.","Подтвердите актуальность расписания и списка группы.","Сообщите о ранних изменениях или инцидентах."],data:"Контекст курса, группы и согласованный календарь замеров.",next:"Получение исходных данных в точке P2.",resources:["Чек-лист подготовки","Календарь курса"]},
-        {id:"p2",code:"P2",title:"Получение исходных данных",status:"Определяется отдельно&nbsp;на&nbsp;курс",time:"До доступа к AICO",summary:"Исходный уровень и контекст фиксируются до начала работы студентов с AICO.",context:["Студенты проходят входной предметный тест и исходные опросы.","Команда связывает доступные показатели вуза."],role:["Выделите общий слот и дайте всем одинаковую инструкцию.","Следуйте согласованной процедуре входного теста.","Зафиксируйте отклонения от плана."],data:"Входной тест, исходные опросы и доступные показатели вуза.",next:"Команда замораживает список и назначает доступ.",resources:["Инструкция входного замера","Шаблон списка группы"]},
-        {id:"r",code:"R",title:"Начало работы с AICO",status:"Зафиксировано",time:"После P2",summary:"Исследовательская команда назначает условия, выдаёт права и проверяет технический запуск.",context:["Студенты получают сообщение о своём условии.","Участники с доступом знакомятся с AICO; остальные учатся как обычно."],role:["Используйте единый текст коммуникации.","Не меняйте назначенный доступ вручную.","Сохраняйте одинаковые учебные требования для всех."],data:"Назначенное условие, права доступа и технические логи запуска.",next:"Основной период курса и, если подтверждён, T1.",resources:["Памятка по запуску AICO","Текст для участников"]},
-        {id:"t1",code:"T1",title:"Промежуточный тест",status:"Определяется отдельно&nbsp;на&nbsp;курс",time:"Ориентир: через 3–4 недели",summary:"Короткий срез даёт ранний сигнал о ходе обучения и условиях проведения.",context:["Студенты выполняют короткий предметный тест.","Небольшой опрос уточняет нагрузку, внешний ИИ и проблемы."],role:["Проведите замер в общем слоте по согласованной инструкции.","Обеспечьте одинаковые условия.","Сообщите о технических и организационных отклонениях."],data:"Результат теста, нагрузка, контекст и технические проблемы.",next:"Продолжение курса и подготовка главного итогового замера.",resources:["Инструкция промежуточного замера","Журнал отклонений"]},
-        {id:"t2",code:"T2",title:"Итоговый тест",status:"Зафиксировано",time:"В конце основного периода",summary:"Главный тест проверяет самостоятельное понимание и применение материала.",context:["Студенты выполняют одинаковый предметный тест без AICO и внешнего ИИ.","После теста заполняют итоговые опросы."],role:["Обеспечьте одинаковые условия и единую инструкцию.","Контролируйте самостоятельное выполнение без ИИ.","Передайте результаты в согласованном формате."],data:"Балл T2 — главный результат; также итоговые опросы и контекст.",next:"T3, если его можно провести по единой процедуре.",resources:["Инструкция итогового теста","Шаблон передачи результатов"]},
-        {id:"t3",code:"T3",title:"Пост-тест",status:"Определяется отдельно&nbsp;на&nbsp;курс",time:"Окно: через 2–6 недель",summary:"Отсроченная проверка оценивает сохранение знаний и перенос в новую ситуацию.",context:["Студенты проходят параллельный тест без ИИ.","Новая задача проверяет перенос знаний."],role:["Заранее зарезервируйте общий слот.","Проведите проверку по единой процедуре без ИИ.","Зафиксируйте отклонения, если они возникли."],data:"Сохранение знаний, перенос и несколько завершающих вопросов.",next:"Сбор данных завершён; команда переходит к анализу.",resources:["Инструкция пост-теста","Завершающий чек-лист"]}
+        {id:"p1",code:"P1",title:"Старт курса",overviewTitle:"Старт<br> курса",status:"Зафиксировано",time:"На старте курса",summary:"Курс начинается по обычной программе; согласованная схема исследования становится рабочей.",explanation:"До выдачи доступа фиксируются состав и группы, доступные показатели подготовки и календарь курса. Это задаёт общий контекст, с которым позже сопоставляются результаты.",context:["Студенты начинают обучение в обычном режиме.","Команда сверяет состав групп и календарь."],role:["Пройдите короткий онбординг по процедуре и работе с AICO.","Ведите курс по обычной программе.","Подтвердите актуальность расписания и списка группы.","Сообщите о ранних изменениях или инцидентах."],data:"Контекст курса, группы и согласованный календарь замеров.",next:"Получение исходных данных в точке P2.",resources:["Чек-лист подготовки","Календарь курса"]},
+        {id:"p2",code:"P2",title:"Получение исходных данных",status:"Определяется отдельно&nbsp;на&nbsp;курс",time:"До доступа к AICO",summary:"Исходный уровень и контекст фиксируются до начала работы студентов с AICO.",explanation:"Входной тест проверяет необходимые знания, базовые понятия и их применение до знакомства с AICO. Эти данные повышают точность сравнения и помогают учесть различия между студентами.",context:["Студенты проходят входной предметный тест и исходные опросы.","Команда связывает доступные показатели вуза."],role:["Выделите общий слот и дайте всем одинаковую инструкцию.","Следуйте согласованной процедуре входного теста.","Зафиксируйте отклонения от плана."],data:"Входной тест, исходные опросы и доступные показатели вуза.",next:"Команда замораживает список и назначает доступ.",resources:["Инструкция входного замера","Шаблон списка группы"]},
+        {id:"r",code:"R",title:"Начало работы с AICO",status:"Зафиксировано",time:"После P2",summary:"Исследовательская команда назначает условия, выдаёт права и проверяет технический запуск.",explanation:"После заморозки списка фиксируется назначенное условие каждого участника. С этого момента плановое различие между группами — только предложение доступа к AICO.",context:["Студенты получают сообщение о своём условии.","Участники с доступом знакомятся с AICO; остальные учатся как обычно."],role:["Используйте единый текст коммуникации.","Не меняйте назначенный доступ вручную.","Сохраняйте одинаковые учебные требования для всех."],data:"Назначенное условие, права доступа и технические логи запуска.",next:"Основной период курса и, если подтверждён, T1.",resources:["Памятка по запуску AICO","Текст для участников"]},
+        {id:"t1",code:"T1",title:"Промежуточный тест",status:"Определяется отдельно&nbsp;на&nbsp;курс",time:"Ориентир: через 3–4 недели",summary:"Короткий срез даёт ранний сигнал о ходе обучения и условиях проведения.",explanation:"Замер планируется примерно через 3–4 недели и дополняется вопросами о нагрузке, внешнем ИИ и технических проблемах. Это диагностическая точка, а не второй главный результат.",context:["Студенты выполняют короткий предметный тест.","Небольшой опрос уточняет нагрузку, внешний ИИ и проблемы."],role:["Проведите замер в общем слоте по согласованной инструкции.","Обеспечьте одинаковые условия.","Сообщите о технических и организационных отклонениях."],data:"Результат теста, нагрузка, контекст и технические проблемы.",next:"Продолжение курса и подготовка главного итогового замера.",resources:["Инструкция промежуточного замера","Журнал отклонений"]},
+        {id:"t2",code:"T2",title:"Итоговый тест",overviewTitle:"Итоговый<br> тест",status:"Зафиксировано",time:"В конце основного периода",summary:"Главный тест проверяет самостоятельное понимание и применение материала.",explanation:"Это основной результат исследования: одинаковый предметный тест с единой инструкцией и рубрикой, выполненный без AICO, внешнего ИИ и неразрешённых материалов.",context:["Студенты выполняют одинаковый предметный тест без AICO и внешнего ИИ.","После теста заполняют итоговые опросы."],role:["Обеспечьте одинаковые условия и единую инструкцию.","Контролируйте самостоятельное выполнение без ИИ.","Передайте результаты в согласованном формате."],data:"Балл T2 — главный результат; также итоговые опросы и контекст.",next:"T3, если его можно провести по единой процедуре.",resources:["Инструкция итогового теста","Шаблон передачи результатов"]},
+        {id:"t3",code:"T3",title:"Пост-тест",overviewTitle:"Пост-<br>тест",status:"Определяется отдельно&nbsp;на&nbsp;курс",time:"Окно: через 2–6 недель",summary:"Отсроченная проверка оценивает сохранение знаний и перенос в новую ситуацию.",explanation:"Параллельная, а не дословно повторённая форма проводится через 2–6 недель после T2. Она показывает, что сохранилось со временем и переносится ли знание на новую задачу.",context:["Студенты проходят параллельный тест без ИИ.","Новая задача проверяет перенос знаний."],role:["Заранее зарезервируйте общий слот.","Проведите проверку по единой процедуре без ИИ.","Зафиксируйте отклонения, если они возникли."],data:"Сохранение знаний, перенос и несколько завершающих вопросов.",next:"Сбор данных завершён; команда переходит к анализу.",resources:["Инструкция пост-теста","Завершающий чек-лист"]}
       ];
 
       const app=document.getElementById("aico-app");
       const routeShell=document.getElementById("route-shell");
       const routeList=document.getElementById("route-list");
-      const routePulse=document.getElementById("route-pulse");
       const stagePanel=document.getElementById("stage-panel");
+      const stageOverview=document.getElementById("stage-overview");
       const stagePanelHome=document.getElementById("stage-panel-home");
       const announcer=document.getElementById("stage-announcer");
       const resourceStage=document.getElementById("resource-stage");
@@ -717,10 +813,13 @@
       let activeView="route";
       let runningTransition=null;
       let fallbackAnimation=null;
+      let overviewAnimation=null;
+      let resourcesAnimation=null;
 
       const listMarkup=items=>`<ul class="a-detail-list">${items.map(item=>`<li>${item}</li>`).join("")}</ul>`;
       const resourceMarkup=items=>items.map((item,index)=>`<li class="a-resource-item"><span class="a-resource-index">${String(index+1).padStart(2,"0")}</span><span>${item}</span></li>`).join("");
-      const panelMarkup=stage=>`<header class="a-detail-head"><div class="a-detail-code">${stage.code}</div><h3 class="a-detail-title">${stage.title}</h3><p class="a-detail-summary">${stage.summary}</p><div class="a-detail-meta"><span class="a-detail-status">${stage.status}</span></div></header><div class="a-detail-grid"><section class="a-detail-block"><h4>Что происходит</h4>${listMarkup(stage.context)}</section><section class="a-detail-block is-role"><h4>Ваша роль</h4>${listMarkup(stage.role)}</section><section class="a-detail-block"><h4>Что собираем</h4><p>${stage.data}</p></section><section class="a-detail-block"><h4>Дальше</h4><p>${stage.next}</p></section></div>`;
+      const overviewMarkup=stage=>`<div class="a-stage-overview-meta"><span class="a-stage-overview-code">${stage.code}</span><span class="a-stage-overview-status">${stage.status}</span></div><div class="a-stage-copy"><h2>${stage.overviewTitle||stage.title}</h2><p>${stage.summary}</p><p class="a-stage-explanation">${stage.explanation}</p></div>`;
+      const panelMarkup=stage=>`<header class="a-detail-head"><h3 class="a-detail-title">${stage.title}</h3><p class="a-detail-summary">${stage.summary}</p><p class="a-detail-explanation">${stage.explanation}</p><div class="a-detail-meta"><span class="a-detail-status">${stage.status}</span></div></header><div class="a-detail-grid"><section class="a-detail-block"><h4>Что происходит</h4>${listMarkup(stage.context)}</section><section class="a-detail-block is-role"><h4>Ваша роль</h4>${listMarkup(stage.role)}</section><section class="a-detail-block"><h4>Что собираем</h4><p>${stage.data}</p></section><section class="a-detail-block"><h4>Дальше</h4><p>${stage.next}</p></section></div>`;
 
       function updateViewIndicator(){
         const selected=viewTabs.find(tab=>tab.getAttribute("aria-selected")==="true");
@@ -732,6 +831,8 @@
       function withTransition(commit,type="stage"){
         runningTransition?.skipTransition?.();
         fallbackAnimation?.cancel?.();
+        overviewAnimation?.cancel?.();
+        resourcesAnimation?.cancel?.();
         if(reduce.matches){commit();return}
         if(document.startViewTransition&&type==="view"){
           const transition=document.startViewTransition(commit);
@@ -741,20 +842,11 @@
         }
         commit();
         const target=type==="stage"?stagePanel:app;
-        fallbackAnimation=target.animate([{opacity:.45,transform:"translateY(7px)"},{opacity:1,transform:"none"}],{duration:type==="stage"?260:320,easing:"cubic-bezier(.2,.75,.25,1)"});
-      }
-
-      function runRouteSignal(fromIndex,toIndex){
-        if(reduce.matches||vertical.matches||fromIndex===toIndex)return;
-        const from=(fromIndex/(stages.length-1))*100;
-        const to=(toIndex/(stages.length-1))*100;
-        routePulse.getAnimations().forEach(animation=>animation.cancel());
-        routePulse.animate([
-          {left:`${from}%`,opacity:0,transform:"scale(.35)"},
-          {left:`${from}%`,opacity:1,transform:"scale(1)",offset:.16},
-          {left:`${to}%`,opacity:1,transform:"scale(1)",offset:.78},
-          {left:`${to}%`,opacity:0,transform:"scale(.4)"}
-        ],{duration:260,easing:"cubic-bezier(.2,.75,.25,1)"});
+        fallbackAnimation=target.animate([{opacity:0},{opacity:1}],{duration:type==="stage"?420:320,easing:"cubic-bezier(.16,1,.3,1)"});
+        if(type==="stage"){
+          overviewAnimation=stageOverview.animate([{opacity:0},{opacity:1}],{duration:420,easing:"cubic-bezier(.16,1,.3,1)"});
+          resourcesAnimation=resourceList.closest(".a-resources").animate([{opacity:0},{opacity:1}],{duration:420,delay:50,easing:"cubic-bezier(.16,1,.3,1)",fill:"backwards"});
+        }
       }
 
       function placeStagePanel(index){
@@ -786,7 +878,6 @@
         const index=stageIds.indexOf(id);
         if(index<0)return;
         const stage=stages[index];
-        const previousIndex=Math.max(0,stageIds.indexOf(activeStage));
         const commit=()=>{
           activeStage=id;
           routeShell.style.setProperty("--active",index);
@@ -799,13 +890,14 @@
             tab.closest(".a-route-stage").classList.toggle("is-active",selected);
           });
           syncStageSemantics(index);
+          stageOverview.innerHTML=overviewMarkup(stage);
           stagePanel.innerHTML=panelMarkup(stage);
           stagePanel.setAttribute("aria-labelledby",`stage-tab-${id}`);
           resourceStage.textContent=stage.code;
           resourceList.innerHTML=resourceMarkup(stage.resources);
         };
         const changed=id!==activeStage||stagePanel.getAttribute("aria-labelledby")!==`stage-tab-${id}`;
-        if(changed&&animate){runRouteSignal(previousIndex,index);withTransition(commit,"stage");}else commit();
+        if(changed&&animate){withTransition(commit,"stage");}else commit();
         if(updateHash)history.replaceState(null,"",`#stage-${id}`);
         if(focus)document.getElementById(`stage-tab-${id}`).focus();
         if(announce)announcer.textContent=`${stage.code}, ${stage.title}, точка ${index+1} из 6`;
@@ -911,13 +1003,7 @@
 
       applyHash({initial:true});
       updateOrientation();
-      requestAnimationFrame(()=>{
-        updateViewIndicator();
-        if(!reduce.matches){
-          document.querySelector(".a-route-line")?.animate([{transform:"scaleX(0)"},{transform:"scaleX(1)"}],{duration:520,easing:"cubic-bezier(.2,.75,.25,1)",fill:"both"});
-          stageTabs.forEach((tab,index)=>tab.querySelector(".a-stage-node")?.animate([{opacity:0,transform:"scale(.35)"},{opacity:1,transform:"scale(1)"}],{duration:300,delay:180+index*48,easing:"cubic-bezier(.2,.75,.25,1)",fill:"backwards"}));
-        }
-      });
+      requestAnimationFrame(updateViewIndicator);
     })();
   </script>
 </body>
