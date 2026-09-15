@@ -5,8 +5,8 @@ window.createLetterScene = function () {
   const title = document.getElementById('hero-title');
   const resetButton = document.getElementById('reset-type');
   const faces = [
+    { family: 'YS Geo Thin', weight: 200 },
     { family: 'Yeseva One', weight: 400 },
-    { family: 'Manrope', weight: 200 },
     { family: 'Playfair Display', weight: 900 },
     { family: 'Unbounded', weight: 900 },
     { family: 'Ruslan Display', weight: 400 }
@@ -41,6 +41,7 @@ window.createLetterScene = function () {
   const randomFace = current => (Math.round(current) + 1 + Math.floor(Math.random() * (faces.length - 1))) % faces.length;
   function setRestFace(g, face){
     g.face=face;
+    if(g===hovered)g.hoverFace=face;
     g.el.style.fontFamily=faces[face].family;
     g.el.style.fontWeight=faces[face].weight;
   }
@@ -160,7 +161,7 @@ window.createLetterScene = function () {
       const age=time-g.flare;const flare=age>=0&&age<3.0?Math.pow(Math.sin(Math.PI*age/3.0),.8):0;
       const target=g===hovered?.86:0;g.energy+=(target-g.energy)*(1-Math.exp(-dt*5));
       const energy=Math.max(g.energy,flare*.9);
-      const interactionFace=(g.face+1+Math.floor(g.seed*4))%faces.length;
+      const interactionFace=g===hovered&&g.hoverFace!=null?g.hoverFace:(g.face+1+Math.floor(g.seed*4))%faces.length;
       let face=g.face+(interactionFace-g.face)*Math.min(1,energy/.75);
       let hop=0;
       if(burstUntil){
@@ -195,13 +196,26 @@ window.createLetterScene = function () {
     hero.dataset.drift=visible&&!document.hidden&&!disabled?'active':'paused';
     if(ready&&!disabled&&visible&&!document.hidden&&!lost){last=performance.now();frame=requestAnimationFrame(tick);}
   }
-  function cancelActivity(){stopBurst();waves.length=0;hovered=null;letters.forEach(g=>{g.energy=0;g.flare=-10;});nextFlare=time+4;}
+  function cancelActivity(){stopBurst();waves.length=0;leaveGlyph();letters.forEach(g=>{g.energy=0;g.flare=-10;});nextFlare=time+4;}
   function clear(){cancelActivity();letters.forEach(g=>setRestFace(g,0));resetButton.disabled=true;}
   function pulse(x,y){if(!ready||disabled||lost)return;if(waves.length===3)waves.shift();waves.push({x:x/width,y:y/height,at:time,touched:new Set()});resetButton.disabled=false;}
-  function hit(e){const r=canvas.getBoundingClientRect();pointer.x=e.clientX-r.x;pointer.y=e.clientY-r.y;
-    hovered=letters.find(g=>Math.abs(pointer.x-g.x)<em*.34&&Math.abs(pointer.y-g.y)<em*.55)||null;}
+  function leaveGlyph(){
+    if(hovered&&hovered.hoverFace!=null){setRestFace(hovered,hovered.hoverFace);hovered.energy=0;}
+    hovered=null;
+  }
+  function hit(e){
+    const r=canvas.getBoundingClientRect();pointer.x=e.clientX-r.x;pointer.y=e.clientY-r.y;
+    const next=letters.find(g=>Math.abs(pointer.x-g.x)<em*.34&&Math.abs(pointer.y-g.y)<em*.55)||null;
+    if(next!==hovered){
+      leaveGlyph();hovered=next;
+      if(next){
+        next.hoverFace=randomFace(next.face);resetButton.disabled=false;
+        if(disabled||!ready||lost)setRestFace(next,next.hoverFace);
+      }
+    }
+  }
   hero.addEventListener('pointermove',e=>{if(e.pointerType!=='touch')hit(e);});
-  hero.addEventListener('pointerleave',()=>{hovered=null;});
+  hero.addEventListener('pointerleave',leaveGlyph);
   let down=null;
   hero.addEventListener('pointerdown',e=>{
     if(e.button!==0||e.isPrimary===false||e.target.closest('button,a'))return;
@@ -215,7 +229,7 @@ window.createLetterScene = function () {
     }
     down=null;
   });
-  hero.addEventListener('pointercancel',()=>{down=null;hovered=null;});
+  hero.addEventListener('pointercancel',()=>{down=null;leaveGlyph();});
   title.tabIndex=0;
   title.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&!e.repeat){e.preventDefault();const r=title.getBoundingClientRect(),c=canvas.getBoundingClientRect();pulse(r.x-c.x+r.width/2,r.y-c.y+r.height/2);phraseTap();}});
   const resizeObserver=new ResizeObserver(()=>resize());resizeObserver.observe(hero);
