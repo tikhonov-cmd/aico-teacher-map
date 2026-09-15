@@ -266,3 +266,28 @@ html[data-motion=off]::view-transition-old(root),html[data-motion=off]::view-tra
 }
 
 @media(prefers-reduced-motion:reduce){@view-transition{navigation:none}}
+
+/* Quiet teacher-style navigation and compact participation guidance. */
+.site-header,.route-page .site-header{max-width:1080px;min-height:62px;justify-content:flex-start;gap:40px;flex-wrap:nowrap}
+.site-header .brand{font-size:19px;font-weight:600;letter-spacing:-.03em;color:var(--blue);gap:0}
+.site-header .top-nav{margin-left:0;display:flex;gap:32px;font-size:16px;align-self:stretch;align-items:stretch}
+.site-header .top-nav a{display:flex;align-items:center;border-bottom:2px solid transparent;text-decoration:none}
+.site-header .top-nav a:hover,.site-header .top-nav a[aria-current]{color:var(--blue);border-bottom-color:var(--blue)}
+.hero{min-height:calc(100svh - 62px)}
+.demo-workbench .demo-options button{min-width:0;overflow-wrap:anywhere;white-space:normal}
+.experiment-intro{padding:24px;max-width:960px;margin:0 auto 32px}
+#rules .experiment-intro h2{font-size:24px;margin-bottom:12px}
+#rules .experiment-intro p{font-size:16px;line-height:1.5;margin-bottom:12px}
+#rules .experiment-intro p:last-child{margin-bottom:0}
+#rules .participation-rules{max-width:760px;margin-inline:auto}
+#rules .participation-rules>h2{font-size:27px;margin-bottom:16px}
+#rules .rules-list h3{font-size:18px}
+#rules .rules-list p{font-size:16px;line-height:1.55}
+@media(max-width:600px){
+ .site-header,.route-page .site-header{gap:24px}
+ .site-header .top-nav{gap:20px;font-size:14px}
+ .experiment-intro{padding:20px}
+ #rules .experiment-intro h2{font-size:20px}
+}
+
+@media(min-width:601px){.site-header,.route-page .site-header{width:min(calc(100% - 2 * var(--gutter) - 32px),1080px)}}

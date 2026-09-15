@@ -24,47 +24,23 @@ window.createProductDemo = function (onChange) {
     "after": 80,
     "controlAfter": 70
   },
-  "music": {
-    "title": "Метроном помог — или партия стала проще?",
-    "situation": "Учебный пример: барабанщик начал репетировать с метрономом. Доля фрагментов без сбоя выросла с 60% до 80%. Но заодно он сменил сложную партию на более простую. Это прогресс или удобное сравнение?",
-    "alternative": "Более простую партию легче сыграть ровно. Рост результата ещё не доказывает пользу метронома.",
-    "design": "Случайно распределить музыкантов между тренировкой с метрономом и без него. Выделить одинаковое время и проверить всех на одной новой партии.",
-    "caseTitle": "Добавлять метроном в каждую репетицию?",
-    "caseText": "Одна группа репетирует с метрономом, другая — без него. Обе получили дополнительную репетицию с наставником. Группы сформировались по желанию музыкантов.",
-    "metric": "Доля фрагментов без ритмического сбоя",
-    "treatment": "С метрономом",
-    "control": "Без метронома",
-    "before": 60,
-    "after": 84,
-    "controlAfter": 72
+  "minecraft": {
+    "title": "Чертёж помог — или дом стал попроще?",
+    "situation": "Учебная модель по мотивам Minecraft: команда начала строить по чертежам. Доля домов, законченных за час, выросла с 60% до 80%. Но вместо замков теперь строят небольшие коттеджи. Что сработало?",
+    "alternative": "Коттедж быстрее построить, чем замок. Без чертежей результат тоже мог улучшиться.",
+    "design": "Случайно разделить игроков на группы с чертежом и без. Дать одинаковые материалы, время и проекты сопоставимой сложности."
   },
-  "sport": {
-    "title": "Новая тренировка или удобная дистанция?",
-    "situation": "Учебный пример: беговой клуб ввёл интервальные тренировки. Доля участников, уложившихся в целевое время, выросла с 50% до 70%. Но контрольный забег перенесли с холмов на ровную трассу. Что помогло?",
-    "alternative": "На ровной трассе проще показать нужное время. Улучшение может объясняться сменой условий.",
-    "design": "Случайно распределить участников между двумя программами одинаковой длительности. Проверить результат на общей трассе в сопоставимых условиях.",
-    "caseTitle": "Менять программу всего бегового клуба?",
-    "caseText": "Одна группа перешла на интервальные тренировки, другая оставила прежнюю программу. Обе начали бегать на более удобной трассе. Программу участники выбирали сами.",
-    "metric": "Доля участников, достигших целевого времени",
-    "treatment": "Интервальная",
-    "control": "Прежняя",
-    "before": 50,
-    "after": 74,
-    "controlAfter": 62
+  "dune": {
+    "title": "Новая навигация или день без песчаной бури?",
+    "situation": "Учебная модель по мотивам «Дюны»: после обучения навигации доля отрядов, вернувшихся вовремя, выросла с 50% до 70%. Одновременно стихли песчаные бури. Насколько помогло обучение?",
+    "alternative": "В спокойную погоду двигаться проще. Рост результата ещё не доказывает эффект обучения.",
+    "design": "В симуляторе случайно назначить отрядам новую или обычную подготовку. Проверить их на сопоставимых маршрутах при одинаковой погоде."
   },
-  "club": {
-    "title": "Таймер победил прокрастинацию — или завтра дедлайн?",
-    "situation": "Учебный пример: клуб прокрастинаторов наконец запустил таймер для работы короткими отрезками. Доля завершённых задач выросла с 40% до 70%. Правда, завтра сдача проекта. Кому вручать медаль?",
-    "alternative": "Приближение дедлайна само по себе ускоряет работу. Таймер мог оказаться рядом в удачный момент.",
-    "design": "Случайно предложить половине участников таймер, остальным — привычный режим. Дать одинаковые задачи и сроки. Медали пока отложить.",
-    "caseTitle": "Назначать таймер почётным председателем клуба?",
-    "caseText": "Часть клуба включила таймер, остальные продолжили работать как обычно. Общий дедлайн приблизился для всех. Использовать таймер участники решили сами.",
-    "metric": "Доля завершённых задач",
-    "treatment": "С таймером",
-    "control": "Без таймера",
-    "before": 40,
-    "after": 70,
-    "controlAfter": 60
+  "sims": {
+    "title": "Сим научился готовить. Или мы просто сменили плиту?",
+    "situation": "Учебная модель по мотивам The Sims: после кулинарных уроков доля ужинов без пожара выросла с 40% до 80%. В тот же день старую плиту заменили новой. Сертификат шефа пока подождёт.",
+    "alternative": "Новая плита могла снизить число пожаров и без уроков. Два изменения произошли одновременно.",
+    "design": "В симуляторе случайно распределить персонажей между уроками и обычной практикой. Оставить одинаковые плиты и рецепты. Огнетушители — тоже."
   }
 };
   const formats = {
@@ -130,7 +106,7 @@ window.createProductDemo = function (onChange) {
       `Разность разностей: (${theme.after} − ${theme.before}) − (${theme.controlAfter} − ${theme.before}) = ${effect} процентных пунктов. Это предварительная оценка эффекта, если без вмешательства показатели двух групп менялись бы параллельно. Проверь более ранние периоды, состав групп и другие изменения. Для вывода о надёжности нужны также размеры выборок и оценка неопределённости.`,
       `DiD = (${theme.after} − ${theme.before}) − (${theme.controlAfter} − ${theme.before}) = ${effect} процентных пунктов. Для причинного вывода нужны параллельные тренды без вмешательства, отсутствие влияния на контроль и отдельных изменений в группах. Равные исходные уровни не доказывают параллельность трендов. Без размеров выборок и структуры данных доверительный интервал не оценить.`
     ];
-    return `<h4>${theme.caseTitle}</h4>${paragraphs([theme.caseText])}<table class="demo-table"><caption>${theme.metric}. Условные данные.</caption><thead><tr><th scope="col">Группа</th><th scope="col">До</th><th scope="col">После</th></tr></thead><tbody><tr><th scope="row">${theme.treatment}</th><td>${theme.before}%</td><td>${theme.after}%</td></tr><tr><th scope="row">${theme.control}</th><td>${theme.before}%</td><td>${theme.controlAfter}%</td></tr></tbody></table>${paragraphs([asks[state.level]])}<button type="button" class="demo-action" id="case-reveal" aria-expanded="false" aria-controls="case-feedback">Показать разбор</button><div id="case-feedback" class="demo-feedback" hidden>${paragraphs([answers[state.level]])}</div>`;
+    return `<h4>${theme.caseTitle}</h4>${paragraphs([theme.caseText])}<table class="demo-table"><caption>${theme.metric}. Условные данные.</caption><thead><tr><th scope="col">Группа</th><th scope="col">До</th><th scope="col">После</th></tr></thead><tbody><tr><th scope="row">${theme.treatment}</th><td>${theme.before}%</td><td>${theme.after}%</td></tr><tr><th scope="row">${theme.control}</th><td>${theme.before}%</td><td>${theme.controlAfter}%</td></tr></tbody></table>${paragraphs([asks[1]])}<button type="button" class="demo-action" id="case-reveal" aria-expanded="false" aria-controls="case-feedback">Показать разбор</button><div id="case-feedback" class="demo-feedback" hidden>${paragraphs([answers[1]])}</div>`;
   }
   const questions = ['Зачем случайное распределение, если люди всё равно разные?', 'Может ли большая выборка исправить плохой эксперимент?', 'Что делать, если карточки уже получили все?'];
   const replies = [
@@ -154,13 +130,13 @@ window.createProductDemo = function (onChange) {
     return `<h4>Что хочется уточнить?</h4><div class="demo-chat-questions" role="group" aria-label="Выбери вопрос">${questions.map((q, i) => `<button type="button" data-question="${i}" aria-pressed="false">${q}</button>`).join('')}</div><div id="chat-reply" class="demo-feedback" aria-live="polite" hidden></div>`;
   }
   function render() {
-    const themed = state.format === 'read' || state.format === 'case';
+    const themed = state.format === 'read';
     $('interest-row').hidden = !themed;
-    $('level-row').hidden = state.format === 'test';
+    $('level-row').hidden = state.format === 'test' || state.format === 'case';
     $('level-note').textContent = levels[state.level];
     $('response-title').textContent = formats[state.format][0];
     $('demo-purpose').textContent = formats[state.format][1];
-    $('demo-content').innerHTML = state.format === 'read' ? read(themes[state.interest]) : state.format === 'case' ? caseStudy(themes[state.interest]) : state.format === 'test' ? quiz() : chat();
+    $('demo-content').innerHTML = state.format === 'read' ? read(themes[state.interest]) : state.format === 'case' ? caseStudy(themes.plain) : state.format === 'test' ? quiz() : chat();
     for (const key of ['format', 'level', 'interest']) document.querySelectorAll(`[data-${key}]`).forEach(b => b.setAttribute('aria-pressed', String(b.dataset[key] === String(state[key]))));
   }
   $('demo-controls').hidden = false;
