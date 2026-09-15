@@ -25,7 +25,7 @@ window.createLetterScene = function () {
       el.textContent = char === ' ' ? '\u00a0' : char;
       line.append(el);
       if (char !== ' ') letters.push({ el, char, row, x: 0, y: 0, energy: 0,
-        phase: Math.random() * Math.PI * 2, seed: Math.random(), flare: -10, face: 0, lens: 0 });
+        phase: Math.random() * Math.PI * 2, seed: Math.random(), flare: -10, face: 0, lens: 0, shownFace: 0, hopY: 0, hopVelocity: 0 });
     }
   });
   const canvas = document.createElement('canvas');
@@ -195,6 +195,16 @@ window.createLetterScene = function () {
         hop=Math.sin(phase*Math.PI*2)*em*.09*burstEnvelope;
       }
       if(g===hovered)face=g.hoverFace;
+      // A small spring impulse accompanies each new face, without snapping position.
+      const shownFace=Math.round(face);
+      if(shownFace!==g.shownFace){
+        g.shownFace=shownFace;
+        if(!burstUntil)g.hopVelocity=-.85;
+      }
+      g.hopVelocity+=(-190*g.hopY-18*g.hopVelocity)*dt;
+      g.hopY+=g.hopVelocity*dt;
+      g.hopY=Math.max(-.045,Math.min(.008,g.hopY));
+      hop+=g.hopY*em;
       const driftX=Math.sin(time*.22+g.phase)*em*.012,driftY=Math.sin(time*.29+g.phase)*em*.023;
       let pushX=0,pushY=0,waveEnergy=0;
       for(const w of waves){const dx=(g.x/width-w.x)*width/height,dy=g.y/height-w.y,dist=Math.hypot(dx,dy),age=time-w.at;
@@ -222,7 +232,7 @@ window.createLetterScene = function () {
     hero.dataset.drift=visible&&!document.hidden&&!disabled?'active':'paused';
     if(ready&&!disabled&&visible&&!document.hidden&&!lost){last=performance.now();frame=requestAnimationFrame(tick);}
   }
-  function cancelActivity(){pointer.active=false;letters.forEach(g=>g.lens=0);stopBurst();waves.length=0;leaveGlyph();letters.forEach(g=>{g.energy=0;g.flare=-10;});nextFlare=time+4;}
+  function cancelActivity(){pointer.active=false;letters.forEach(g=>g.lens=0);stopBurst();waves.length=0;leaveGlyph();letters.forEach(g=>{g.energy=0;g.flare=-10;g.hopY=0;g.hopVelocity=0;});nextFlare=time+4;}
   function clear(){cancelActivity();letters.forEach(g=>setRestFace(g,0));resetButton.disabled=true;}
   function pulse(x,y){if(!ready||disabled||lost)return;if(waves.length===3)waves.shift();waves.push({x:x/width,y:y/height,at:time,touched:new Set()});resetButton.disabled=false;}
   function leaveGlyph(){
