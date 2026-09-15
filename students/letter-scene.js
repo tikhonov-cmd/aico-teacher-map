@@ -39,6 +39,11 @@ window.createLetterScene = function () {
   const quad = [-1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1];
   let buffer, phraseTaps = 0, burstStarted = 0, burstUntil = 0;
   const randomFace = current => (Math.round(current) + 1 + Math.floor(Math.random() * (faces.length - 1))) % faces.length;
+  function setRestFace(g, face){
+    g.face=face;
+    g.el.style.fontFamily=faces[face].family;
+    g.el.style.fontWeight=faces[face].weight;
+  }
   function stopBurst(){burstUntil=0;phraseTaps=0;hero.dataset.burst='idle';}
   function phraseTap(){
     if(!ready||disabled||lost||burstUntil)return;
@@ -62,7 +67,7 @@ window.createLetterScene = function () {
     float ripple(vec2 p,out vec2 push){push=vec2(0);float total=0.0;
       for(int i=0;i<3;i++){vec4 r=uWaves[i];if(r.w<=0.0)continue;
         vec2 d=(p-r.xy)*vec2(uRes.x/uRes.y,1);float dist=length(d);
-        float band=exp(-pow((dist-r.z*.85)*5.2,2.0));
+        float band=exp(-pow((dist-r.z*.65)*5.2,2.0));
         float amp=band*exp(-r.z*(2.4/2.6))*r.w;
         total+=amp;push+=(dist>.0001?d/dist:vec2(0))*amp;
       }return total;}
@@ -81,11 +86,11 @@ window.createLetterScene = function () {
       return texture2D(uAtlas,(cell+p)/vec2(8.0,uRows*5.0)).a;
     }
     void main(){vec2 push;float wave=ripple(vPage,push);
-      vec2 p=vLocal-push*.085;
+      vec2 p=vLocal-push*.05;
       float e=clamp(uEnergy+wave*.8,0.0,1.0);
       p+=vec2(noise(vPage*vec2(13.0,9.0)+uTime*.35)-.5,
-              noise(vPage*vec2(11.0,8.0)-uTime*.3+17.0)-.5)*e*e*.045;
-      float waveFace=2.0+2.0*sin(uTime*8.0+uSeed*31.0);
+              noise(vPage*vec2(11.0,8.0)-uTime*.3+17.0)-.5)*e*e*.028;
+      float waveFace=2.0+2.0*sin(uTime*5.5+uSeed*31.0);
       float f=clamp(mix(uFace,waveFace,smoothstep(.035,.28,wave)),0.0,4.0),fi=floor(f);
       float blend=smoothstep(.27,.73,fract(f));
       // Each pixel belongs to one complete face: no pale double-image crossfade.
@@ -96,7 +101,7 @@ window.createLetterScene = function () {
     }`;
   const bgVertex = `attribute vec2 aPosition;varying vec2 vPage;void main(){vPage=aPosition*.5+.5;gl_Position=vec4(aPosition*vec2(1,-1),0,1);}`;
   const bgFragment = `precision highp float;varying vec2 vPage;${common}
-    void main(){vec2 push;float wave=ripple(vPage,push);gl_FragColor=vec4(.14,.28,.93,wave*.055);}`;
+    void main(){vec2 push;float wave=ripple(vPage,push);gl_FragColor=vec4(.14,.28,.93,wave*.04);}`;
   function compile(type, source) {
     const shader = gl.createShader(type); gl.shaderSource(shader, source); gl.compileShader(shader);
     if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(shader));
@@ -140,32 +145,40 @@ window.createLetterScene = function () {
     const now=performance.now();
     if(burstUntil&&now>=burstUntil)stopBurst();
     const burstAge=burstUntil?(now-burstStarted)/1000:0;
-    const burstEnvelope=burstUntil?Math.min(1,burstAge/.15,(burstUntil-now)/400):0;
+    const burstEnvelope=burstUntil?Math.min(1,burstAge/.25,(burstUntil-now)/500):0;
     gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);gl.enable(gl.BLEND);gl.blendFuncSeparate(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA,gl.ONE,gl.ONE_MINUS_SRC_ALPHA);
     const data=waveData();use(background);gl.uniform2f(bgUniforms.uRes,width,height);gl.uniform1f(bgUniforms.uTime,time);gl.uniform4fv(bgUniforms['uWaves[0]'],data);gl.drawArrays(gl.TRIANGLES,0,6);
     use(program);gl.uniform2f(uniforms.uRes,width,height);gl.uniform1f(uniforms.uTime,time);gl.uniform4fv(uniforms['uWaves[0]'],data);gl.uniform1f(uniforms.uRows,rows);gl.uniform1i(uniforms.uAtlas,0);
     for(const g of letters){
-      const age=time-g.flare;const flare=age>=0&&age<2.4?Math.pow(Math.sin(Math.PI*age/2.4),.8):0;
+      // A wave commits one new resting face as its front reaches this letter.
+      for(const w of waves){
+        const distance=Math.hypot((g.x/width-w.x)*width/height,g.y/height-w.y);
+        if(!w.touched.has(g)&&(time-w.at)*.65>=distance){
+          setRestFace(g,randomFace(g.face));w.touched.add(g);
+        }
+      }
+      const age=time-g.flare;const flare=age>=0&&age<3.0?Math.pow(Math.sin(Math.PI*age/3.0),.8):0;
       const target=g===hovered?.86:0;g.energy+=(target-g.energy)*(1-Math.exp(-dt*5));
       const energy=Math.max(g.energy,flare*.9);
-      let face=Math.min(4,Math.max(g.face,energy*(2.7+g.seed*1.3)));
+      const interactionFace=(g.face+1+Math.floor(g.seed*4))%faces.length;
+      let face=g.face+(interactionFace-g.face)*Math.min(1,energy/.75);
       let hop=0;
       if(burstUntil){
-        const phase=burstAge*8-g.x/width*1.5-g.row*.3;
+        const phase=burstAge*5.5-g.x/width*1.5-g.row*.3;
         const step=Math.floor(phase);
         if(step!==g.burstStep){g.burstStep=step;g.burstTarget=randomFace(g.burstTarget);}
-        g.burstFace+=(g.burstTarget-g.burstFace)*(1-Math.exp(-dt*24));
+        g.burstFace+=(g.burstTarget-g.burstFace)*(1-Math.exp(-dt*16));
         face+=(g.burstFace-face)*burstEnvelope;
-        hop=Math.sin(phase*Math.PI*2)*em*.20*burstEnvelope;
+        hop=Math.sin(phase*Math.PI*2)*em*.09*burstEnvelope;
       }
-      const driftX=Math.sin(time*.29+g.phase)*em*.018,driftY=Math.sin(time*.39+g.phase)*em*.035;
+      const driftX=Math.sin(time*.22+g.phase)*em*.012,driftY=Math.sin(time*.29+g.phase)*em*.023;
       let pushX=0,pushY=0,waveEnergy=0;
       for(const w of waves){const dx=(g.x/width-w.x)*width/height,dy=g.y/height-w.y,dist=Math.hypot(dx,dy),age=time-w.at;
-        const amp=Math.exp(-Math.pow((dist-age*.85)*5.2,2))*Math.exp(-age*(2.4/2.6));
-        waveEnergy+=amp;if(dist){pushX+=dx/dist*amp*em*.08;pushY+=dy/dist*amp*em*.08;}}
-      const scale=Math.min(1.13,1+Math.sin(time*.51+g.phase)*.025+energy*.075+waveEnergy*.055+Math.sin(burstAge*14+g.phase)*.035*burstEnvelope);
+        const amp=Math.exp(-Math.pow((dist-age*.65)*5.2,2))*Math.exp(-age*(2.4/2.6));
+        waveEnergy+=amp;if(dist){pushX+=dx/dist*amp*em*.05;pushY+=dy/dist*amp*em*.05;}}
+      const scale=Math.min(1.08,1+Math.sin(time*.38+g.phase)*.018+energy*.045+waveEnergy*.03+Math.sin(burstAge*10+g.phase)*.02*burstEnvelope);
       gl.uniform2f(uniforms.uCenter,g.x+driftX+pushX,g.y+driftY+pushY+hop);
-      gl.uniform1f(uniforms.uSize,em*1.6);gl.uniform1f(uniforms.uScale,scale);gl.uniform1f(uniforms.uAngle,Math.sin(time*.24+g.phase)*.012+energy*(g.seed-.5)*.13);
+      gl.uniform1f(uniforms.uSize,em*1.6);gl.uniform1f(uniforms.uScale,scale);gl.uniform1f(uniforms.uAngle,Math.sin(time*.18+g.phase)*.008+energy*(g.seed-.5)*.08);
       gl.uniform1f(uniforms.uChar,chars.indexOf(g.char));gl.uniform1f(uniforms.uFace,face);gl.uniform1f(uniforms.uEnergy,Math.max(energy,burstEnvelope*.5));gl.uniform1f(uniforms.uSeed,g.seed);
       gl.uniform3fv(uniforms.uInk,g.row===1?[.141,.278,.933]:[.078,.137,.18]);gl.drawArrays(gl.TRIANGLES,0,6);
     }
@@ -182,8 +195,9 @@ window.createLetterScene = function () {
     hero.dataset.drift=visible&&!document.hidden&&!disabled?'active':'paused';
     if(ready&&!disabled&&visible&&!document.hidden&&!lost){last=performance.now();frame=requestAnimationFrame(tick);}
   }
-  function clear(){stopBurst();waves.length=0;hovered=null;letters.forEach(g=>{g.face=0;g.energy=0;g.flare=-10;g.el.style.fontFamily='';g.el.style.fontWeight='';});nextFlare=time+4;resetButton.disabled=true;}
-  function pulse(x,y){if(!ready||disabled||lost)return;if(waves.length===3)waves.shift();waves.push({x:x/width,y:y/height,at:time});resetButton.disabled=false;}
+  function cancelActivity(){stopBurst();waves.length=0;hovered=null;letters.forEach(g=>{g.energy=0;g.flare=-10;});nextFlare=time+4;}
+  function clear(){cancelActivity();letters.forEach(g=>setRestFace(g,0));resetButton.disabled=true;}
+  function pulse(x,y){if(!ready||disabled||lost)return;if(waves.length===3)waves.shift();waves.push({x:x/width,y:y/height,at:time,touched:new Set()});resetButton.disabled=false;}
   function hit(e){const r=canvas.getBoundingClientRect();pointer.x=e.clientX-r.x;pointer.y=e.clientY-r.y;
     hovered=letters.find(g=>Math.abs(pointer.x-g.x)<em*.34&&Math.abs(pointer.y-g.y)<em*.55)||null;}
   hero.addEventListener('pointermove',e=>{if(e.pointerType!=='touch')hit(e);});
@@ -218,8 +232,8 @@ window.createLetterScene = function () {
   }catch(error){ready=false;sync();console.warn('Letter scene uses static fallback:',error.message);}}
   if(gl)Promise.all(faces.map(f=>document.fonts.load(`${f.weight} 100px "${f.family}"`,chars.join('')))).then(boot).catch(()=>sync());
   return {
-    setMotion(off){disabled=off;if(off)clear();sync();},
-    shuffle(){letters.forEach(g=>{g.face=randomFace(g.face);if(disabled||!ready){g.el.style.fontFamily=faces[g.face].family;g.el.style.fontWeight=faces[g.face].weight;}});resetButton.disabled=false;},
+    setMotion(off){disabled=off;if(off)cancelActivity();sync();},
+    shuffle(){letters.forEach(g=>setRestFace(g,randomFace(g.face)));resetButton.disabled=false;},
     reset(){clear();if(ready&&!disabled)draw(0);},
     pulse(){pulse(width/2,height/2);},
   };
