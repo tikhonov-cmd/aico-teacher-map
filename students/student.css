@@ -137,3 +137,23 @@ main p,main li,main summary,.site-footer span{ text-wrap:pretty; }
 
 .skip{visibility:hidden}.skip:focus{visibility:visible}
 .demo-formula{white-space:nowrap}
+
+/* The tinted surface contains everything that changes with the demo controls. */
+.demo-preview{background:#e1e5e7;border-radius:12px;margin-top:24px;padding:32px 32px 32px 44px}
+.demo-preview .demo-content{max-width:none}
+.demo-answers{display:grid;grid-template-columns:1fr;gap:8px}
+.demo-answers button{text-align:left;font-size:16px;padding:14px 16px;background:var(--paper);border-color:var(--rule)}
+.demo-chat-questions{display:grid;grid-template-columns:1fr;gap:8px}
+.demo-chat-questions button{background:var(--paper);font-size:16px;padding:14px 16px}
+.demo-table{width:100%;border-collapse:collapse;margin:20px 0 24px;font-size:16px;font-variant-numeric:tabular-nums}
+.demo-table caption{text-align:left;font-size:14px;color:var(--muted);padding-bottom:12px;text-wrap:balance}
+.demo-table th,.demo-table td{padding:12px 8px;border-bottom:1px solid #bac6ce;text-align:right}
+.demo-table th{font-weight:550}.demo-table th:first-child{text-align:left;padding-left:0;width:58%}
+.demo-table thead th{font-size:14px;color:var(--muted)}
+.demo-table th:last-child,.demo-table td:last-child{padding-right:0}
+@media(max-width:600px){
+ .demo-preview{padding:24px 16px 24px 36px}
+ .demo-answers button,.demo-chat-questions button{font-size:14px;padding:12px}
+ .demo-table{font-size:14px}.demo-table thead th,.demo-table caption{font-size:12px}
+ .demo-table th,.demo-table td{padding:10px 6px}
+}

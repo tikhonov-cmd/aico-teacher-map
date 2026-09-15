@@ -7,7 +7,7 @@
 <meta name="description" content="Выбери, как тебе удобнее разобраться в исследовании AICO: сразу суть, по шагам или на примере. Этапы, правила и условия участия для студентов.">
 <title>AICO — твой способ разобраться</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232d4cff'/%3E%3Cpath d='M7 24 15 7h3l7 17h-5l-2-5h-6l-2 5zm7-9h3l-1.5-4z' fill='white'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="student.css?v=23e57ef1">
+<link rel="stylesheet" href="student.css?v=89ab4680">
 </head>
 
 <body>
@@ -33,12 +33,12 @@
  <div class="personalizer product-demo" id="personalizer">
   <h2 id="demo-heading">Твой курс. В понятной тебе форме.</h2>
   <p class="product-intro">Преподаватель загружает материалы своего курса. На их основе AICO создаёт лонгриды, тесты и кейсы, а в чате можно уточнить то, что осталось непонятным.</p>
-  <p class="demo-invitation">Попробуй на одной теме — вероятности. Выбери формат, измени сложность и посмотри, как интересы меняют подачу.</p>
+  <p class="demo-invitation">Попробуй на теме «Причинность и A/B-тесты»: как понять, что изменение действительно сработало. Выбери формат и настрой подачу объяснения.</p>
   <div class="demo-controls" id="demo-controls" hidden>
    <div class="demo-choice-row"><span id="format-label" class="demo-label">Что попробуем</span><div class="demo-options" role="group" aria-labelledby="format-label">
     <button type="button" data-format="read" aria-pressed="true" aria-controls="demo-content">Лонгрид</button><button type="button" data-format="test" aria-pressed="false" aria-controls="demo-content">Тест</button><button type="button" data-format="case" aria-pressed="false" aria-controls="demo-content">Кейс</button><button type="button" data-format="chat" aria-pressed="false" aria-controls="demo-content">Чат</button>
    </div></div>
-   <div class="demo-choice-row"><span id="level-label" class="demo-label">Как объяснить</span><div class="demo-options demo-options-secondary" role="group" aria-labelledby="level-label">
+   <div class="demo-choice-row" id="level-row"><span id="level-label" class="demo-label">Как объяснить</span><div class="demo-options demo-options-secondary" role="group" aria-labelledby="level-label">
     <button type="button" data-level="0" aria-pressed="true" aria-controls="demo-content">Проще</button><button type="button" data-level="1" aria-pressed="false" aria-controls="demo-content">Подробнее</button><button type="button" data-level="2" aria-pressed="false" aria-controls="demo-content">Глубже</button>
    </div><p class="demo-control-note" id="level-note">Без сложных терминов, с объяснением каждого шага.</p></div>
    <div class="demo-choice-row" id="interest-row"><span id="interest-label" class="demo-label">Что тебе интересно</span><div class="demo-options demo-options-secondary" role="group" aria-labelledby="interest-label">
@@ -48,7 +48,7 @@
   <div class="demo-preview">
    <h3 id="response-title">Разобраться в теме до лекции</h3>
    <p class="demo-purpose" id="demo-purpose">Открой лонгрид, чтобы познакомиться с темой или вернуться к трудному месту. Выбери глубину объяснения и близкие тебе примеры.</p>
-   <div class="demo-content" id="demo-content"><h4>Как посчитать шанс?</h4><p>Из 20 карточек пять — синие. Ты берёшь одну наугад, и любая карточка может попасться с одинаковой вероятностью.</p><p>Пять подходящих карточек из двадцати — это 5 ÷ 20 = ¼, или 25%. Так мы выражаем шанс вытянуть синюю карточку.</p></div>
+   <div class="demo-content" id="demo-content"><h4>Скидка подняла продажи. Или просто совпало?</h4><p>Магазин ввёл скидку 10%, и доля посетителей, которые сделали заказ, выросла с 8% до 12%. В ту же неделю запустили рекламу для постоянных покупателей. Можно ли приписать весь рост скидке?</p><p>Новая реклама привела людей, которые и так чаще покупают. Чтобы понять эффект скидки, нужно оценить, что произошло бы без неё в тот же период. Одного сравнения «до и после» мало.</p></div>
   </div>
   <p class="demo-caption">Это небольшой пример возможностей AICO. В платформе содержание строится по материалам твоего курса, а интересы для персонализации ты указываешь сам.</p>
  </div>
@@ -78,7 +78,7 @@
 <div class="sr-only" id="announcer" aria-live="polite" aria-atomic="true"></div>
 <script src="letter-scene.js?v=6110c709"></script>
 
-<script src="product-demo.js?v=186ab5fc"></script>
+<script src="product-demo.js?v=0c54c814"></script>
 <script src="student-ui.js?v=e237b0d7"></script>
 </body>
 </html>
