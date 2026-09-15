@@ -157,3 +157,25 @@ main p,main li,main summary,.site-footer span{ text-wrap:pretty; }
  .demo-table{font-size:14px}.demo-table thead th,.demo-table caption{font-size:12px}
  .demo-table th,.demo-table td{padding:10px 6px}
 }
+
+
+/* One responsive content grid on both student pages, with separate prose measure. */
+:root{--content-max:1200px;--prose-measure:76ch;--content-width:min(calc(100% - 2 * var(--gutter)),var(--content-max))}
+.site-header,.intro-reading,.voluntary,.reading,.route,.site-footer{width:var(--content-width);margin-inline:auto}
+.intro-context,.personalizer,.product-demo,.section-content,.route-page .section,.route-page .event-copy{max-width:none}
+.hero-lead{max-width:none}
+.product-intro,.demo-invitation,.rules-list p,.faq details p,.section-content>p,.data-disclosure p,.event-description,.event-example{max-width:var(--prose-measure)}
+.demo-choice-row .demo-options{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr)}
+.demo-preview>h3,.demo-preview>.demo-purpose,.demo-preview .demo-content{width:100%;max-width:960px;margin-inline:auto}
+.demo-content p{max-width:var(--prose-measure)}
+.demo-caption{max-width:var(--prose-measure);padding-left:0}
+.help-line{margin:16px 0 0;padding:32px max(var(--gutter),calc((100% - var(--content-max))/2))}
+.site-footer{padding:27px 0}
+@media(min-width:1440px){
+ .product-intro,.demo-content p,.section-content>p,.event-description,.event-example{font-size:20px}
+ .demo-invitation,.demo-purpose,.rules-list p,.faq details p,.data-disclosure p{font-size:18px}
+ .demo-label,.demo-options button{font-size:16px}
+}
+@media(max-width:600px){
+ .demo-choice-row .demo-options{display:flex;flex-wrap:wrap}
+}
