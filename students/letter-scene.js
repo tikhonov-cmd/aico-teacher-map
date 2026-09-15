@@ -84,7 +84,7 @@ window.createLetterScene = function () {
       float c=cos(uAngle),s=sin(uAngle);p=mat2(c,-s,s,c)*p+uCenter;
       vPage=p/uRes;gl_Position=vec4(vPage*vec2(2,-2)+vec2(-1,1),0,1);}`;
   const fragment = `precision highp float;varying vec2 vLocal,vPage;
-    uniform sampler2D uAtlas;uniform float uChar,uRows,uCount,uFace,uEnergy,uSize,uScale,uSeed;uniform vec3 uInk;
+    uniform sampler2D uAtlas;uniform float uChar,uRows,uCount,uFace,uEnergy,uSize,uScale,uSeed,uHover;uniform vec3 uInk;
     ${common}
     float sampleFace(vec2 p,float face){
       if(p.x<0.0||p.x>1.0||p.y<0.0||p.y>1.0)return 0.0;
@@ -97,7 +97,7 @@ window.createLetterScene = function () {
       p+=vec2(noise(vPage*vec2(13.0,9.0)+uTime*.35)-.5,
               noise(vPage*vec2(11.0,8.0)-uTime*.3+17.0)-.5)*e*e*.028;
       float last=uCount-1.0;float waveFace=last*.5*(1.0+sin(uTime*5.5+uSeed*31.0));
-      float f=clamp(mix(uFace,waveFace,smoothstep(.035,.28,wave)),0.0,last),fi=floor(f);
+      float f=clamp(mix(uFace,waveFace,(1.0-uHover)*smoothstep(.035,.28,wave)),0.0,last),fi=floor(f);
       float blend=smoothstep(.27,.73,fract(f));
       // Each pixel belongs to one complete face: no pale double-image crossfade.
       float n=noise(vLocal*8.0+uTime*.15);
@@ -132,7 +132,8 @@ window.createLetterScene = function () {
       ctx.font=`${font.style||'normal'} ${font.weight} 160px "${font.family}"`;
       const xHeight=ctx.measureText('о').actualBoundingBoxAscent||84;
       const widest=Math.max(...chars.map(c=>ctx.measureText(c).width));
-      const size=Math.min(160*(tile*.325/xHeight),160*tile*.68/widest);
+      // Preserve the supplied YS face at its native em size; normalize only expressive variants.
+      const size=f===0?tile/1.6:Math.min(160*(tile*.325/xHeight),160*tile*.68/widest);
       ctx.font=`${font.style||'normal'} ${font.weight} ${size}px "${font.family}"`;
       chars.forEach((char,i)=>ctx.fillText(char,(i%columns+.5)*tile,(f*rows+Math.floor(i/columns)+.65625)*tile));
     });
@@ -144,7 +145,11 @@ window.createLetterScene = function () {
   function resize() {
     const r=canvas.getBoundingClientRect();width=r.width;height=r.height;em=parseFloat(getComputedStyle(title).fontSize);
     const dpr=Math.min(devicePixelRatio||1,1.5);canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);
-    for(const g of letters){const b=g.el.getBoundingClientRect();g.x=b.x-r.x+b.width/2;g.y=b.y-r.y+b.height*.5;}
+    // Keep each original glyph's advance, instead of imposing a monospace grid.
+    const metrics=document.createElement('canvas').getContext('2d');
+    metrics.font=`300 ${em}px "YS Display Light"`;
+    for(const g of letters)g.el.style.width=`${metrics.measureText(g.char).width}px`;
+    for(const g of letters){const b=g.el.getBoundingClientRect();g.x=b.x-r.x+b.width/2;g.y=b.y-r.y+b.height*.5;g.hitWidth=b.width;}
     if(ready&&!lost){gl.viewport(0,0,canvas.width,canvas.height);makeAtlas();draw(0);}
   }
   function waveData(){const a=new Float32Array(12);waves.forEach((w,i)=>a.set([w.x,w.y,time-w.at,1],i*4));return a;}
@@ -164,6 +169,9 @@ window.createLetterScene = function () {
           setRestFace(g,randomFace(g.face));w.touched.add(g);
         }
       }
+      if(g===hovered&&time>=g.nextHover){
+        g.hoverFace=randomFace(g.hoverFace);g.nextHover=time+.12;
+      }
       const age=time-g.flare;const flare=age>=0&&age<3.0?Math.pow(Math.sin(Math.PI*age/3.0),.8):0;
       const target=g===hovered?.86:0;g.energy+=(target-g.energy)*(1-Math.exp(-dt*5));
       const energy=Math.max(g.energy,flare*.9);
@@ -178,6 +186,7 @@ window.createLetterScene = function () {
         face+=(g.burstFace-face)*burstEnvelope;
         hop=Math.sin(phase*Math.PI*2)*em*.09*burstEnvelope;
       }
+      if(g===hovered)face=g.hoverFace;
       const driftX=Math.sin(time*.22+g.phase)*em*.012,driftY=Math.sin(time*.29+g.phase)*em*.023;
       let pushX=0,pushY=0,waveEnergy=0;
       for(const w of waves){const dx=(g.x/width-w.x)*width/height,dy=g.y/height-w.y,dist=Math.hypot(dx,dy),age=time-w.at;
@@ -186,7 +195,7 @@ window.createLetterScene = function () {
       const scale=Math.min(1.08,1+Math.sin(time*.38+g.phase)*.018+energy*.045+waveEnergy*.03+Math.sin(burstAge*10+g.phase)*.02*burstEnvelope);
       gl.uniform2f(uniforms.uCenter,g.x+driftX+pushX,g.y+driftY+pushY+hop);
       gl.uniform1f(uniforms.uSize,em*1.6);gl.uniform1f(uniforms.uScale,scale);gl.uniform1f(uniforms.uAngle,Math.sin(time*.18+g.phase)*.008+energy*(g.seed-.5)*.08);
-      gl.uniform1f(uniforms.uChar,chars.indexOf(g.char));gl.uniform1f(uniforms.uFace,face);gl.uniform1f(uniforms.uEnergy,Math.max(energy,burstEnvelope*.5));gl.uniform1f(uniforms.uSeed,g.seed);
+      gl.uniform1f(uniforms.uChar,chars.indexOf(g.char));gl.uniform1f(uniforms.uFace,face);gl.uniform1f(uniforms.uEnergy,Math.max(energy,burstEnvelope*.5));gl.uniform1f(uniforms.uSeed,g.seed);gl.uniform1f(uniforms.uHover,g===hovered?1:0);
       gl.uniform3fv(uniforms.uInk,g.row===1?[.141,.278,.933]:[.078,.137,.18]);gl.drawArrays(gl.TRIANGLES,0,6);
     }
   }
@@ -211,11 +220,11 @@ window.createLetterScene = function () {
   }
   function hit(e){
     const r=canvas.getBoundingClientRect();pointer.x=e.clientX-r.x;pointer.y=e.clientY-r.y;
-    const next=letters.find(g=>Math.abs(pointer.x-g.x)<em*.34&&Math.abs(pointer.y-g.y)<em*.55)||null;
+    const next=letters.find(g=>Math.abs(pointer.x-g.x)<g.hitWidth/2&&Math.abs(pointer.y-g.y)<em*.55)||null;
     if(next!==hovered){
       leaveGlyph();hovered=next;
       if(next){
-        next.hoverFace=randomFace(next.face);resetButton.disabled=false;
+        next.hoverFace=randomFace(next.face);next.nextHover=time+.12;next.flare=-10;resetButton.disabled=false;
         if(disabled||!ready||lost)setRestFace(next,next.hoverFace);
       }
     }
@@ -245,7 +254,7 @@ window.createLetterScene = function () {
   canvas.addEventListener('webglcontextrestored',()=>{lost=false;boot();});
   function boot(){try{
     program=makeProgram(vertex,fragment);background=makeProgram(bgVertex,bgFragment);
-    uniforms=locations(program,['uRes','uTime','uWaves[0]','uRows','uCount','uAtlas','uCenter','uSize','uScale','uAngle','uChar','uFace','uEnergy','uSeed','uInk']);
+    uniforms=locations(program,['uRes','uTime','uWaves[0]','uRows','uCount','uAtlas','uCenter','uSize','uScale','uAngle','uChar','uFace','uEnergy','uSeed','uHover','uInk']);
     bgUniforms=locations(background,['uRes','uTime','uWaves[0]']);
     buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(quad),gl.STATIC_DRAW);
     texture=gl.createTexture();ready=true;resize();sync();
