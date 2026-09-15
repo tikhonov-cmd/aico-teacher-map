@@ -1,4 +1,5 @@
-Headline typefaces: Caveat 600; Lobster 400; Old Standard TT Italic 400; Press Start 2P 400; Rubik Mono One 400; Unbounded 600.
-Source: Google Fonts, text subsets containing the characters of the Russian headline.
-Each typeface is embedded in students/index.html. Licenses are preserved in this directory.
-Onest remains embedded for body text; its license is ../OFL-Onest.txt.
+Student hero typefaces: Manrope 200, Playfair Display 900, Yeseva One 400, Unbounded 900, Ruslan Display 400.
+Source: https://github.com/google/fonts (ofl directories).
+WOFF subsets contain only the headline characters. Variable fonts instantiated to the listed weight. Each family retains its SIL Open Font License alongside this file.
+Earlier unused family licenses are retained for repository history.
+Onest remains embedded for reading and interface text; license: ../OFL-Onest.txt.
