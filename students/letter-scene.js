@@ -5,9 +5,9 @@ window.createLetterScene = function () {
   const title = document.getElementById('hero-title');
   const resetButton = document.getElementById('reset-type');
   const faces = [
+    { family: 'Yeseva One', weight: 400 },
     { family: 'Manrope', weight: 200 },
     { family: 'Playfair Display', weight: 900 },
-    { family: 'Yeseva One', weight: 400 },
     { family: 'Unbounded', weight: 900 },
     { family: 'Ruslan Display', weight: 400 }
   ];
@@ -37,7 +37,19 @@ window.createLetterScene = function () {
   const chars = [...new Set(letters.map(g => g.char))];
   const columns = 8, rows = Math.ceil(chars.length / columns);
   const quad = [-1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1];
-  let buffer;
+  let buffer, phraseTaps = 0, burstStarted = 0, burstUntil = 0;
+  const randomFace = current => (Math.round(current) + 1 + Math.floor(Math.random() * (faces.length - 1))) % faces.length;
+  function stopBurst(){burstUntil=0;phraseTaps=0;hero.dataset.burst='idle';}
+  function phraseTap(){
+    if(!ready||disabled||lost||burstUntil)return;
+    phraseTaps++;
+    if(phraseTaps===5){
+      phraseTaps=0;burstStarted=performance.now();burstUntil=burstStarted+5000;
+      letters.forEach(g=>{g.burstStep=-Infinity;g.burstFace=g.face;g.burstTarget=g.face;});
+      hero.dataset.burst='active';resetButton.disabled=false;
+      document.getElementById('announcer').textContent='Быстрая волна на пять секунд.';
+    }
+  }
 
   // Same expanding Gaussian wavefront and decay as «СЕКРЕТ».
   const common = `
@@ -61,7 +73,7 @@ window.createLetterScene = function () {
       float c=cos(uAngle),s=sin(uAngle);p=mat2(c,-s,s,c)*p+uCenter;
       vPage=p/uRes;gl_Position=vec4(vPage*vec2(2,-2)+vec2(-1,1),0,1);}`;
   const fragment = `precision highp float;varying vec2 vLocal,vPage;
-    uniform sampler2D uAtlas;uniform float uChar,uRows,uFace,uEnergy,uSize,uScale;uniform vec3 uInk;
+    uniform sampler2D uAtlas;uniform float uChar,uRows,uFace,uEnergy,uSize,uScale,uSeed;uniform vec3 uInk;
     ${common}
     float sampleFace(vec2 p,float face){
       if(p.x<0.0||p.x>1.0||p.y<0.0||p.y>1.0)return 0.0;
@@ -73,7 +85,8 @@ window.createLetterScene = function () {
       float e=clamp(uEnergy+wave*.8,0.0,1.0);
       p+=vec2(noise(vPage*vec2(13.0,9.0)+uTime*.35)-.5,
               noise(vPage*vec2(11.0,8.0)-uTime*.3+17.0)-.5)*e*e*.045;
-      float f=clamp(max(uFace,wave*3.7),0.0,4.0),fi=floor(f);
+      float waveFace=2.0+2.0*sin(uTime*8.0+uSeed*31.0);
+      float f=clamp(mix(uFace,waveFace,smoothstep(.035,.28,wave)),0.0,4.0),fi=floor(f);
       float blend=smoothstep(.27,.73,fract(f));
       // Each pixel belongs to one complete face: no pale double-image crossfade.
       float n=noise(vLocal*8.0+uTime*.15);
@@ -124,6 +137,10 @@ window.createLetterScene = function () {
   }
   function waveData(){const a=new Float32Array(12);waves.forEach((w,i)=>a.set([w.x,w.y,time-w.at,1],i*4));return a;}
   function draw(dt) {
+    const now=performance.now();
+    if(burstUntil&&now>=burstUntil)stopBurst();
+    const burstAge=burstUntil?(now-burstStarted)/1000:0;
+    const burstEnvelope=burstUntil?Math.min(1,burstAge/.15,(burstUntil-now)/400):0;
     gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);gl.enable(gl.BLEND);gl.blendFuncSeparate(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA,gl.ONE,gl.ONE_MINUS_SRC_ALPHA);
     const data=waveData();use(background);gl.uniform2f(bgUniforms.uRes,width,height);gl.uniform1f(bgUniforms.uTime,time);gl.uniform4fv(bgUniforms['uWaves[0]'],data);gl.drawArrays(gl.TRIANGLES,0,6);
     use(program);gl.uniform2f(uniforms.uRes,width,height);gl.uniform1f(uniforms.uTime,time);gl.uniform4fv(uniforms['uWaves[0]'],data);gl.uniform1f(uniforms.uRows,rows);gl.uniform1i(uniforms.uAtlas,0);
@@ -131,41 +148,62 @@ window.createLetterScene = function () {
       const age=time-g.flare;const flare=age>=0&&age<2.4?Math.pow(Math.sin(Math.PI*age/2.4),.8):0;
       const target=g===hovered?.86:0;g.energy+=(target-g.energy)*(1-Math.exp(-dt*5));
       const energy=Math.max(g.energy,flare*.9);
-      const face=Math.min(4,Math.max(g.face,energy*(2.7+g.seed*1.3)));
+      let face=Math.min(4,Math.max(g.face,energy*(2.7+g.seed*1.3)));
+      let hop=0;
+      if(burstUntil){
+        const phase=burstAge*8-g.x/width*1.5-g.row*.3;
+        const step=Math.floor(phase);
+        if(step!==g.burstStep){g.burstStep=step;g.burstTarget=randomFace(g.burstTarget);}
+        g.burstFace+=(g.burstTarget-g.burstFace)*(1-Math.exp(-dt*24));
+        face+=(g.burstFace-face)*burstEnvelope;
+        hop=Math.sin(phase*Math.PI*2)*em*.20*burstEnvelope;
+      }
       const driftX=Math.sin(time*.29+g.phase)*em*.018,driftY=Math.sin(time*.39+g.phase)*em*.035;
       let pushX=0,pushY=0,waveEnergy=0;
       for(const w of waves){const dx=(g.x/width-w.x)*width/height,dy=g.y/height-w.y,dist=Math.hypot(dx,dy),age=time-w.at;
         const amp=Math.exp(-Math.pow((dist-age*.85)*5.2,2))*Math.exp(-age*(2.4/2.6));
         waveEnergy+=amp;if(dist){pushX+=dx/dist*amp*em*.08;pushY+=dy/dist*amp*em*.08;}}
-      const scale=1+Math.sin(time*.51+g.phase)*.025+energy*.075+waveEnergy*.055;
-      gl.uniform2f(uniforms.uCenter,g.x+driftX+pushX,g.y+driftY+pushY);
+      const scale=Math.min(1.13,1+Math.sin(time*.51+g.phase)*.025+energy*.075+waveEnergy*.055+Math.sin(burstAge*14+g.phase)*.035*burstEnvelope);
+      gl.uniform2f(uniforms.uCenter,g.x+driftX+pushX,g.y+driftY+pushY+hop);
       gl.uniform1f(uniforms.uSize,em*1.6);gl.uniform1f(uniforms.uScale,scale);gl.uniform1f(uniforms.uAngle,Math.sin(time*.24+g.phase)*.012+energy*(g.seed-.5)*.13);
-      gl.uniform1f(uniforms.uChar,chars.indexOf(g.char));gl.uniform1f(uniforms.uFace,face);gl.uniform1f(uniforms.uEnergy,energy);
+      gl.uniform1f(uniforms.uChar,chars.indexOf(g.char));gl.uniform1f(uniforms.uFace,face);gl.uniform1f(uniforms.uEnergy,Math.max(energy,burstEnvelope*.5));gl.uniform1f(uniforms.uSeed,g.seed);
       gl.uniform3fv(uniforms.uInk,g.row===1?[.141,.278,.933]:[.078,.137,.18]);gl.drawArrays(gl.TRIANGLES,0,6);
     }
   }
   function tick(now){frame=0;if(!ready||disabled||!visible||document.hidden||lost)return;
     const dt=Math.min((now-last)/1000||0,.05);last=now;time+=dt;
     while(waves.length&&time-waves[0].at>2.6)waves.shift();
-    if(time>=nextFlare){const candidates=letters.filter(g=>g!==hovered);candidates[Math.floor(Math.random()*candidates.length)].flare=time;nextFlare=time+3+Math.random()*4;}
+    if(time>=nextFlare){const candidates=letters.filter(g=>g!==hovered);const count=1+Math.floor(Math.random()*5);for(let i=0;i<count;i++){const g=candidates.splice(Math.floor(Math.random()*candidates.length),1)[0];g.flare=time;}nextFlare=time+3+Math.random()*4;}
     draw(dt);frame=requestAnimationFrame(tick);
   }
-  function sync(){cancelAnimationFrame(frame);frame=0;
+  function sync(){cancelAnimationFrame(frame);frame=0;if(disabled||!visible||document.hidden||lost)stopBurst();
     hero.classList.toggle('has-letter-scene',ready&&!disabled&&!lost);
     document.getElementById('wave-type').disabled=disabled||!ready||lost;
     hero.dataset.drift=visible&&!document.hidden&&!disabled?'active':'paused';
     if(ready&&!disabled&&visible&&!document.hidden&&!lost){last=performance.now();frame=requestAnimationFrame(tick);}
   }
-  function clear(){waves.length=0;hovered=null;letters.forEach(g=>{g.face=0;g.energy=0;g.flare=-10;g.el.style.fontFamily='';g.el.style.fontWeight='';});nextFlare=time+4;resetButton.disabled=true;}
+  function clear(){stopBurst();waves.length=0;hovered=null;letters.forEach(g=>{g.face=0;g.energy=0;g.flare=-10;g.el.style.fontFamily='';g.el.style.fontWeight='';});nextFlare=time+4;resetButton.disabled=true;}
   function pulse(x,y){if(!ready||disabled||lost)return;if(waves.length===3)waves.shift();waves.push({x:x/width,y:y/height,at:time});resetButton.disabled=false;}
   function hit(e){const r=canvas.getBoundingClientRect();pointer.x=e.clientX-r.x;pointer.y=e.clientY-r.y;
     hovered=letters.find(g=>Math.abs(pointer.x-g.x)<em*.34&&Math.abs(pointer.y-g.y)<em*.55)||null;}
   hero.addEventListener('pointermove',e=>{if(e.pointerType!=='touch')hit(e);});
   hero.addEventListener('pointerleave',()=>{hovered=null;});
   let down=null;
-  hero.addEventListener('pointerdown',e=>{if(e.button!==0||e.target.closest('button,a'))return;down={x:e.clientX,y:e.clientY,id:e.pointerId};if(e.pointerType!=='touch'){hit(e);pulse(pointer.x,pointer.y);}});
-  hero.addEventListener('pointerup',e=>{if(e.pointerType==='touch'&&down&&down.id===e.pointerId&&Math.hypot(e.clientX-down.x,e.clientY-down.y)<12){const r=canvas.getBoundingClientRect();pulse(e.clientX-r.x,e.clientY-r.y);}down=null;});
+  hero.addEventListener('pointerdown',e=>{
+    if(e.button!==0||e.isPrimary===false||e.target.closest('button,a'))return;
+    down={x:e.clientX,y:e.clientY,id:e.pointerId,onPhrase:title.contains(e.target)};
+    if(e.pointerType!=='touch'){hit(e);pulse(pointer.x,pointer.y);}
+  });
+  hero.addEventListener('pointerup',e=>{
+    if(down&&down.id===e.pointerId&&Math.hypot(e.clientX-down.x,e.clientY-down.y)<12){
+      if(e.pointerType==='touch'){const r=canvas.getBoundingClientRect();pulse(e.clientX-r.x,e.clientY-r.y);}
+      if(down.onPhrase&&title.contains(e.target))phraseTap();
+    }
+    down=null;
+  });
   hero.addEventListener('pointercancel',()=>{down=null;hovered=null;});
+  title.tabIndex=0;
+  title.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&!e.repeat){e.preventDefault();const r=title.getBoundingClientRect(),c=canvas.getBoundingClientRect();pulse(r.x-c.x+r.width/2,r.y-c.y+r.height/2);phraseTap();}});
   const resizeObserver=new ResizeObserver(()=>resize());resizeObserver.observe(hero);
   if('IntersectionObserver'in window)new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;sync();}).observe(hero);
   document.addEventListener('visibilitychange',sync);
@@ -173,7 +211,7 @@ window.createLetterScene = function () {
   canvas.addEventListener('webglcontextrestored',()=>{lost=false;boot();});
   function boot(){try{
     program=makeProgram(vertex,fragment);background=makeProgram(bgVertex,bgFragment);
-    uniforms=locations(program,['uRes','uTime','uWaves[0]','uRows','uAtlas','uCenter','uSize','uScale','uAngle','uChar','uFace','uEnergy','uInk']);
+    uniforms=locations(program,['uRes','uTime','uWaves[0]','uRows','uAtlas','uCenter','uSize','uScale','uAngle','uChar','uFace','uEnergy','uSeed','uInk']);
     bgUniforms=locations(background,['uRes','uTime','uWaves[0]']);
     buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(quad),gl.STATIC_DRAW);
     texture=gl.createTexture();ready=true;resize();sync();
@@ -181,7 +219,7 @@ window.createLetterScene = function () {
   if(gl)Promise.all(faces.map(f=>document.fonts.load(`${f.weight} 100px "${f.family}"`,chars.join('')))).then(boot).catch(()=>sync());
   return {
     setMotion(off){disabled=off;if(off)clear();sync();},
-    shuffle(){letters.forEach((g,i)=>{g.face=1+i%4;if(disabled||!ready){g.el.style.fontFamily=faces[g.face].family;g.el.style.fontWeight=faces[g.face].weight;}});resetButton.disabled=false;},
+    shuffle(){letters.forEach(g=>{g.face=randomFace(g.face);if(disabled||!ready){g.el.style.fontFamily=faces[g.face].family;g.el.style.fontWeight=faces[g.face].weight;}});resetButton.disabled=false;},
     reset(){clear();if(ready&&!disabled)draw(0);},
     pulse(){pulse(width/2,height/2);},
   };
