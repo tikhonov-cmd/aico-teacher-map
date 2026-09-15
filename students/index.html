@@ -7,7 +7,7 @@
 <meta name="description" content="Выбери, как тебе удобнее разобраться в исследовании AICO: сразу суть, по шагам или на примере. Этапы, правила и условия участия для студентов.">
 <title>AICO — твой способ разобраться</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232d4cff'/%3E%3Cpath d='M7 24 15 7h3l7 17h-5l-2-5h-6l-2 5zm7-9h3l-1.5-4z' fill='white'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="student.css?v=7ddd2562">
+<link rel="stylesheet" href="student.css?v=23e57ef1">
 </head>
 
 <body>
@@ -24,53 +24,61 @@
   <h1 class="hero-title" id="hero-title" aria-label="У каждого свой способ разобраться"><span class="title-line" aria-hidden="true">У каждого</span><span class="title-line emphasis" aria-hidden="true">свой способ</span><span class="title-line" aria-hidden="true">разобраться</span></h1>
   <div class="hero-controls"><span class="type-hint" id="type-hint">Нажми на фразу. Пять нажатий включают быстрый ритм.</span>  <div class="type-controls"><button type="button" id="wave-type" disabled>Пустить волну</button><button type="button" id="reshape">Перемешать буквы</button><button type="button" id="reset-type" disabled>Сбросить</button> <button type="button" class="motion-toggle" id="motion-toggle" aria-pressed="false"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M6 4v12M14 4v12"/></svg><span id="motion-label">Без движения</span></button></div></div>
 </section>
-<section class="intro-reading" id="intro-reading" aria-label="Знакомство с исследованием">
+<section class="intro-reading" id="intro-reading" aria-label="Знакомство с AICO">
  <div class="intro-context">
 
-  <p class="hero-lead"><b>AICO — ИИ-компаньон для твоего курса.</b><br>Мы исследуем, помогает ли он самостоятельно понимать и применять знания.</p>
+  <p class="hero-lead"><b>AICO — ИИ-компаньон для твоего курса.</b><br>Разбирайся в темах, проверяй себя и задавай вопросы — на материалах твоего курса.</p>
   <a class="text-link" href="route.html">Посмотреть мой маршрут <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg></a>
  </div>
- <div class="personalizer" id="personalizer">
-  <h2 id="mode-question">Как тебе удобнее разобраться?</h2>
-  <div class="mode-switch" role="group" aria-labelledby="mode-question" id="mode-switch">
-   <span class="choice-wash" aria-hidden="true" id="choice-wash"></span>
-   <button type="button" class="mode-button" data-mode="brief" aria-pressed="true" aria-controls="explanation">Сразу суть</button>
-   <button type="button" class="mode-button" data-mode="steps" aria-pressed="false" aria-controls="explanation">По шагам</button>
-   <button type="button" class="mode-button" data-mode="example" aria-pressed="false" aria-controls="explanation">На примере</button>
+ <div class="personalizer product-demo" id="personalizer">
+  <h2 id="demo-heading">Твой курс. В понятной тебе форме.</h2>
+  <p class="product-intro">Преподаватель загружает материалы своего курса. На их основе AICO создаёт лонгриды, тесты и кейсы, а в чате можно уточнить то, что осталось непонятным.</p>
+  <p class="demo-invitation">Попробуй на одной теме — вероятности. Выбери формат, измени сложность и посмотри, как интересы меняют подачу.</p>
+  <div class="demo-controls" id="demo-controls" hidden>
+   <div class="demo-choice-row"><span id="format-label" class="demo-label">Что попробуем</span><div class="demo-options" role="group" aria-labelledby="format-label">
+    <button type="button" data-format="read" aria-pressed="true" aria-controls="demo-content">Лонгрид</button><button type="button" data-format="test" aria-pressed="false" aria-controls="demo-content">Тест</button><button type="button" data-format="case" aria-pressed="false" aria-controls="demo-content">Кейс</button><button type="button" data-format="chat" aria-pressed="false" aria-controls="demo-content">Чат</button>
+   </div></div>
+   <div class="demo-choice-row"><span id="level-label" class="demo-label">Как объяснить</span><div class="demo-options demo-options-secondary" role="group" aria-labelledby="level-label">
+    <button type="button" data-level="0" aria-pressed="true" aria-controls="demo-content">Проще</button><button type="button" data-level="1" aria-pressed="false" aria-controls="demo-content">Подробнее</button><button type="button" data-level="2" aria-pressed="false" aria-controls="demo-content">Глубже</button>
+   </div><p class="demo-control-note" id="level-note">Без сложных терминов, с объяснением каждого шага.</p></div>
+   <div class="demo-choice-row" id="interest-row"><span id="interest-label" class="demo-label">Что тебе интересно</span><div class="demo-options demo-options-secondary" role="group" aria-labelledby="interest-label">
+    <button type="button" data-interest="plain" aria-pressed="true" aria-controls="demo-content">Без темы</button><button type="button" data-interest="space" aria-pressed="false" aria-controls="demo-content">Космос</button><button type="button" data-interest="pirates" aria-pressed="false" aria-controls="demo-content">Пираты</button><button type="button" data-interest="marvel" aria-pressed="false" aria-controls="demo-content">Marvel</button>
+   </div></div>
   </div>
-
-  <div class="explanation" id="explanation" aria-labelledby="response-title">
-   <h3 class="response-title" id="response-title">Один курс. Разный опыт.</h3>
-   <div class="response-body" id="response-body"><p>Ты учишься по программе своего курса. Часть участников получает доступ к AICO, часть учится без него.</p><p>Общие замеры помогают сравнить, что участники понимают и умеют применять самостоятельно.</p></div>
+  <div class="demo-preview">
+   <h3 id="response-title">Разобраться в теме до лекции</h3>
+   <p class="demo-purpose" id="demo-purpose">Открой лонгрид, чтобы познакомиться с темой или вернуться к трудному месту. Выбери глубину объяснения и близкие тебе примеры.</p>
+   <div class="demo-content" id="demo-content"><h4>Как посчитать шанс?</h4><p>Из 20 карточек пять — синие. Ты берёшь одну наугад, и любая карточка может попасться с одинаковой вероятностью.</p><p>Пять подходящих карточек из двадцати — это 5 ÷ 20 = ¼, или 25%. Так мы выражаем шанс вытянуть синюю карточку.</p></div>
   </div>
-  <p class="personal-note"><span class="mode-status" id="mode-status">Выбери другой способ — текст перестроится.</span>Здесь меняется подача объяснения. Условия исследования остаются общими.</p>
+  <p class="demo-caption">Это небольшой пример возможностей AICO. В платформе содержание строится по материалам твоего курса, а интересы для персонализации ты указываешь сам.</p>
  </div>
 </section>
 <div class="voluntary"><p>Участие в исследовании добровольное. Отказ от исследовательских замеров не влияет на оценку.</p><a href="#data">Об участии и данных</a></div>
 <div class="reading">
 
  <section class="section" id="rules"><h2>Общие правила</h2><div class="section-content"><ol class="rules-list">
-  <li><div><h3>Общая учебная программа</h3><p>Обе группы проходят один курс. Активности внутри AICO не дают официальных баллов и не становятся условием допуска.</p></div></li>
-  <li><div><h3>У каждого теста есть инструкция</h3><p>Итоговый тест и пост-тест, если он проводится, выполняются без AICO и других ИИ-сервисов. Для входного и промежуточного замеров действуют отдельные инструкции курса.</p></div></li>
-  <li><div><h3>Доступ назначает команда исследования</h3><p>Ориентируйся на сообщение о своих условиях. Если доступ не назначен, продолжай учиться по обычной программе и следуй инструкциям по общим замерам.</p></div></li>
-  <li><div><h3>В опросах важен твой реальный опыт</h3><p>Рассказывай об использовании других ИИ-сервисов, трудностях и технических проблемах. Это помогает понять, в каких условиях проходило обучение.</p></div></li>
+  <li><div><h3>Учебный курс остаётся общим</h3><p>С доступом к AICO или без него ты учишься по программе своего курса. Занятия внутри платформы — дополнительная практика: за них не начисляют баллы курса, и они не нужны для допуска.</p></div></li>
+  <li><div><h3>Перед тестом загляни в инструкцию</h3><p>В конце курса важно увидеть, что ты уже можешь сделать самостоятельно. Поэтому итоговый тест нужно пройти без AICO и других ИИ‑сервисов. То же правило действует для пост-теста, если он будет на твоём курсе. Для тестов в начале и середине курса правила могут отличаться — команда расскажет о них заранее.</p></div></li>
+  <li><div><h3>Дождись сообщения о доступе</h3><p>Команда курса сообщит, будет ли у тебя доступ к AICO и как войти. Если доступа нет, продолжай обычное обучение. Тесты и опросы исследования помогут сравнить опыт обеих групп — инструкции к ним придут отдельно.</p></div></li>
+  <li><div><h3>Рассказывай, как всё было на самом деле</h3><p>Что помогало разобраться? Где было трудно? Пользовался ли ты другими ИИ‑сервисами? В опросах важен твой реальный опыт, включая неудобства и ошибки платформы. Так мы сможем точнее понять результаты исследования.</p></div></li>
  </ol></div></section>
- <section class="section" id="data"><h2>Твоё участие. Твои данные.</h2><div class="section-content"><p>Участие в исследовании добровольное. Отказ от исследовательских замеров и использования данных не влияет на оценку.</p><p>Перед участием тебе должны сообщить, какие данные собираются и как отказаться. Форму согласия, сроки хранения и доступ к диалогам утверждает твой вуз.</p><details class="data-disclosure"><summary>Какие данные могут использоваться<svg class="disclosure-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16"/><path class="vertical" d="M12 4v16"/></svg></summary><p>Результаты тестов и анкет, доступные учебные данные, события использования AICO и технические ошибки. Протокол также предусматривает хранение текстов диалогов с ограниченным доступом.</p><p>Для анализа используется исследовательский идентификатор; связь с личностью хранится отдельно у уполномоченной стороны. Точный состав данных и условия их использования нужно проверить в документах своего вуза.</p></details></div></section>
+ <section class="section" id="data"><h2>Твоё участие. Твои данные.</h2><div class="section-content"><p>Участие в исследовании добровольное. Отказ от исследовательских замеров и использования данных не влияет на оценку.</p><p>Перед тем как согласиться, прочитай информацию от своего вуза: какие данные будут собирать, кто сможет их видеть и как отказаться. Вуз утверждает форму согласия, сроки хранения данных и правила доступа к диалогам.</p><details class="data-disclosure"><summary>Какие данные могут использоваться<svg class="disclosure-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16"/><path class="vertical" d="M12 4v16"/></svg></summary><p>Исследователи могут использовать результаты тестов и анкет, учебные данные, сведения о работе в AICO и технических ошибках. Тексты диалогов тоже могут храниться — доступ к ним ограничен.</p><p>При анализе вместо имени используют исследовательский код. Информацию о том, кому он принадлежит, хранят отдельно у уполномоченной стороны. Точный список данных и условия их использования смотри в документах своего вуза.</p></details></div></section>
  <section class="section" id="questions"><h2>Если остались вопросы</h2><div class="section-content faq">
-  <details><summary>Почему у меня может не быть доступа к AICO?<svg class="disclosure-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16"/><path class="vertical" d="M12 4v16"/></svg></summary><p>Для сравнения нужны разные условия обучения. Когда это возможно, команда назначает доступ случайно; на отдельных курсах используется другой согласованный формат. Конкретные условия сообщит команда курса.</p></details>
-  <details><summary>Можно пользоваться другими ИИ-сервисами?<svg class="disclosure-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16"/><path class="vertical" d="M12 4v16"/></svg></summary><p>На итоговом тесте и пост-тесте использовать ИИ нельзя. В остальное время следуй правилам курса и конкретного задания. Если в анкете спрашивают о других ИИ-сервисах, укажи свой реальный опыт.</p></details>
-  <details><summary>Все шесть этапов обязательны на моём курсе?<svg class="disclosure-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16"/><path class="vertical" d="M12 4v16"/></svg></summary><p>Маршрут показывает общую схему исследования. Промежуточный замер и возможность пост-теста подтверждаются отдельно. Даты, состав заданий и инструкции определяет команда твоего курса.</p></details>
-  <details><summary>Что делать, если AICO не открывается?<svg class="disclosure-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16"/><path class="vertical" d="M12 4v16"/></svg></summary><p>Проверь сообщение о назначенном доступе и ссылку, которую прислала команда курса. Если доступ назначен, но войти не получается, сообщи координатору или преподавателю, на каком шаге возникла проблема.</p></details>
-  <details><summary>Как отказаться от участия в исследовании?<svg class="disclosure-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16"/><path class="vertical" d="M12 4v16"/></svg></summary><p>Обратись к координатору исследования по контакту из приглашения или формы согласия. Процедуру отказа и разделение исследовательского участия с образовательным доступом определяет вуз. Отказ от исследовательских замеров и использования данных не влияет на оценку.</p></details>
+  <details><summary>Почему у меня может не быть доступа к AICO?<svg class="disclosure-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16"/><path class="vertical" d="M12 4v16"/></svg></summary><p>AICO участвует в исследовании: мы хотим понять, помогает ли он самостоятельно понимать и применять знания. Для сравнения часть студентов получает доступ к платформе, а часть проходит тот же курс без неё.</p><p>Когда это возможно, доступ распределяют случайно. На некоторых курсах используют другую, заранее согласованную схему. О своих условиях ты узнаешь из сообщения команды. Если доступа нет, учебная программа остаётся той же, а твои результаты тоже важны для исследования.</p></details>
+  <details><summary>Можно пользоваться другими ИИ-сервисами?<svg class="disclosure-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16"/><path class="vertical" d="M12 4v16"/></svg></summary><p>Во время обычной учёбы ориентируйся на правила преподавателя и конкретного задания. Разрешение пользоваться ИИ в одном задании не означает, что его можно использовать в любом тесте.</p><p>Итоговый тест нужно пройти самостоятельно, без AICO и других ИИ‑сервисов. Если на курсе будет пост-тест, это правило действует и для него. Правила для входного и промежуточного тестов команда сообщит отдельно. В анкетах честно указывай, какими инструментами пользовался: это помогает понять твой учебный опыт.</p></details>
+  <details><summary>Все шесть этапов обязательны на моём курсе?<svg class="disclosure-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16"/><path class="vertical" d="M12 4v16"/></svg></summary><p>На странице маршрута показана общая схема: начало курса, входной тест, назначение доступа и дальнейшие проверки знаний. Она помогает понять порядок событий, но конкретный набор тестов и опросов зависит от курса.</p><p>Промежуточного теста может не быть. Пост-тест — ещё одну проверку спустя время после итогового — тоже подтверждают отдельно. Команда курса сообщит, какие этапы будут у тебя, когда они пройдут и что нужно подготовить.</p></details>
+  <details><summary>Что делать, если AICO не открывается?<svg class="disclosure-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16"/><path class="vertical" d="M12 4v16"/></svg></summary><p>Сначала найди сообщение команды и проверь, назначен ли тебе доступ. Если да, открой именно ссылку из этого сообщения и следуй инструкции по входу.</p><p>Если войти всё равно не получается, напиши координатору или преподавателю. Укажи, на каком шаге возникла проблема и что написано на экране. Так команде будет проще помочь. Контакт координатора ищи в приглашении на исследование.</p></details>
+  <details><summary>Как отказаться от участия в исследовании?<svg class="disclosure-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16"/><path class="vertical" d="M12 4v16"/></svg></summary><p>Напиши координатору по контакту из приглашения или формы согласия и сообщи, что хочешь отказаться от участия в исследовании. Если не можешь найти контакт, обратись к преподавателю курса.</p><p>Отказ от исследовательских замеров и использования данных не влияет на оценку. Координатор объяснит процедуру, а также уточнит, что произойдёт с уже собранными данными и доступом к платформе: эти условия определяет твой вуз.</p></details>
  </div></section>
  <section class="help-line" id="help"><div><h2>Что-то пошло не так?</h2><p>Напиши координатору по контакту из приглашения на исследование. Если не знаешь, к кому обратиться, спроси преподавателя курса.</p></div><a href="route.html">Посмотреть маршрут <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg></a></section>
 </div>
-<noscript><p class="no-script">Чтобы менять шрифты и способы объяснения, включи JavaScript. <a href="route.html">Этапы исследования</a> доступны на отдельной странице.</p></noscript>
+<noscript><p class="no-script">Чтобы менять шрифты и попробовать демонстрацию AICO, включи JavaScript. <a href="route.html">Этапы исследования</a> доступны на отдельной странице.</p></noscript>
 </main>
 <footer class="site-footer"><span class="footer-brand">AICO</span><span>Исследование обучения с ИИ-компаньоном</span></footer>
 <div class="sr-only" id="announcer" aria-live="polite" aria-atomic="true"></div>
 <script src="letter-scene.js?v=6110c709"></script>
 
-<script src="student-ui.js?v=8aa82266"></script>
+<script src="product-demo.js?v=186ab5fc"></script>
+<script src="student-ui.js?v=e237b0d7"></script>
 </body>
 </html>
