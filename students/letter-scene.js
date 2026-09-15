@@ -7,14 +7,13 @@ window.createLetterScene = function () {
   const faces = [
     { family: 'YS Display Light', weight: 300 },
     { family: 'Yeseva One', weight: 400 },
-    { family: 'Playfair Display', weight: 900 },
-    { family: 'Unbounded', weight: 900 },
+    { family: 'Manrope', weight: 200 },
+    { family: 'YS Geo Thin', weight: 200 },
     { family: 'Ruslan Display', weight: 400 },
     { family: 'Caveat', weight: 600, style: 'normal' },
     { family: 'Lobster', weight: 400, style: 'normal' },
     { family: 'Old Standard TT', weight: 400, style: 'italic' },
-    { family: 'Press Start 2P', weight: 400, style: 'normal' },
-    { family: 'Rubik Mono One', weight: 400, style: 'normal' }
+    { family: 'Press Start 2P', weight: 400, style: 'normal' }
   ];
   const letters = [];
   title.querySelectorAll('.title-line').forEach((line, row) => {
@@ -26,7 +25,7 @@ window.createLetterScene = function () {
       el.textContent = char === ' ' ? '\u00a0' : char;
       line.append(el);
       if (char !== ' ') letters.push({ el, char, row, x: 0, y: 0, energy: 0,
-        phase: Math.random() * Math.PI * 2, seed: Math.random(), flare: -10, face: 0 });
+        phase: Math.random() * Math.PI * 2, seed: Math.random(), flare: -10, face: 0, lens: 0 });
     }
   });
   const canvas = document.createElement('canvas');
@@ -38,7 +37,7 @@ window.createLetterScene = function () {
   let ready = false, disabled = false, visible = true, frame = 0, last = 0, time = 0;
   let width = 1, height = 1, em = 100, nextFlare = 2 + Math.random() * 2, hovered = null;
   let program, background, texture, uniforms, bgUniforms, lost = false;
-  const waves = [], pointer = { x: -10000, y: -10000 };
+  const waves = [], pointer = { x: -10000, y: -10000, active: false };
   const chars = [...new Set(letters.map(g => g.char))];
   const columns = 8, rows = Math.ceil(chars.length / columns);
   const quad = [-1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1];
@@ -128,6 +127,8 @@ window.createLetterScene = function () {
     const tile = Math.min(width < 600 ? 128 : 256,Math.floor(gl.getParameter(gl.MAX_TEXTURE_SIZE)/(rows*faces.length)));
     const atlas = document.createElement('canvas');atlas.width=columns*tile;atlas.height=rows*faces.length*tile;
     const ctx=atlas.getContext('2d');ctx.fillStyle='#fff';ctx.textAlign='center';ctx.textBaseline='alphabetic';
+    ctx.font=`300 160px "YS Display Light"`;
+    const nativeWidths=chars.map(c=>ctx.measureText(c).width);
     faces.forEach((font,f)=>{
       ctx.font=`${font.style||'normal'} ${font.weight} 160px "${font.family}"`;
       const xHeight=ctx.measureText('о').actualBoundingBoxAscent||84;
@@ -135,7 +136,14 @@ window.createLetterScene = function () {
       // Preserve the supplied YS face at its native em size; normalize only expressive variants.
       const size=f===0?tile/1.6:Math.min(160*(tile*.325/xHeight),160*tile*.68/widest);
       ctx.font=`${font.style||'normal'} ${font.weight} ${size}px "${font.family}"`;
-      chars.forEach((char,i)=>ctx.fillText(char,(i%columns+.5)*tile,(f*rows+Math.floor(i/columns)+.65625)*tile));
+      chars.forEach((char,i)=>{
+        ctx.font=`${font.style||'normal'} ${font.weight} ${size}px "${font.family}"`;
+        const advance=ctx.measureText(char).width;
+        // Expressive letters may spill slightly, but cannot swallow their neighbours.
+        const fitted=f===0?size:Math.min(size,size*(nativeWidths[i]/160)*(tile/1.6)*1.12/advance);
+        ctx.font=`${font.style||'normal'} ${font.weight} ${fitted}px "${font.family}"`;
+        ctx.fillText(char,(i%columns+.5)*tile,(f*rows+Math.floor(i/columns)+.65625)*tile);
+      });
     });
     gl.bindTexture(gl.TEXTURE_2D,texture);gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,false);
     gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,atlas);
@@ -192,8 +200,11 @@ window.createLetterScene = function () {
       for(const w of waves){const dx=(g.x/width-w.x)*width/height,dy=g.y/height-w.y,dist=Math.hypot(dx,dy),age=time-w.at;
         const amp=Math.exp(-Math.pow((dist-age*.65)*5.2,2))*Math.exp(-age*(2.4/2.6));
         waveEnergy+=amp;if(dist){pushX+=dx/dist*amp*em*.05;pushY+=dy/dist*amp*em*.05;}}
-      const scale=Math.min(1.08,1+Math.sin(time*.38+g.phase)*.018+energy*.045+waveEnergy*.03+Math.sin(burstAge*10+g.phase)*.02*burstEnvelope);
-      gl.uniform2f(uniforms.uCenter,g.x+driftX+pushX,g.y+driftY+pushY+hop);
+      const lensDX=g.x-pointer.x,lensDY=g.y-pointer.y;
+      const lensTarget=disabled||!pointer.active?0:Math.exp(-(lensDX*lensDX+lensDY*lensDY)/(em*em*1.15*1.15));
+      g.lens+=(lensTarget-g.lens)*(1-Math.exp(-dt*12));
+      const scale=g.lens*.27+Math.min(1.08,1+Math.sin(time*.38+g.phase)*.018+energy*.045+waveEnergy*.03+Math.sin(burstAge*10+g.phase)*.02*burstEnvelope);
+      gl.uniform2f(uniforms.uCenter,g.x+driftX+pushX+Math.max(-em,Math.min(em,lensDX))*g.lens*.23,g.y+driftY+pushY+hop+Math.max(-em,Math.min(em,lensDY))*g.lens*.23);
       gl.uniform1f(uniforms.uSize,em*1.6);gl.uniform1f(uniforms.uScale,scale);gl.uniform1f(uniforms.uAngle,Math.sin(time*.18+g.phase)*.008+energy*(g.seed-.5)*.08);
       gl.uniform1f(uniforms.uChar,chars.indexOf(g.char));gl.uniform1f(uniforms.uFace,face);gl.uniform1f(uniforms.uEnergy,Math.max(energy,burstEnvelope*.5));gl.uniform1f(uniforms.uSeed,g.seed);gl.uniform1f(uniforms.uHover,g===hovered?1:0);
       gl.uniform3fv(uniforms.uInk,g.row===1?[.141,.278,.933]:[.078,.137,.18]);gl.drawArrays(gl.TRIANGLES,0,6);
@@ -211,7 +222,7 @@ window.createLetterScene = function () {
     hero.dataset.drift=visible&&!document.hidden&&!disabled?'active':'paused';
     if(ready&&!disabled&&visible&&!document.hidden&&!lost){last=performance.now();frame=requestAnimationFrame(tick);}
   }
-  function cancelActivity(){stopBurst();waves.length=0;leaveGlyph();letters.forEach(g=>{g.energy=0;g.flare=-10;});nextFlare=time+4;}
+  function cancelActivity(){pointer.active=false;letters.forEach(g=>g.lens=0);stopBurst();waves.length=0;leaveGlyph();letters.forEach(g=>{g.energy=0;g.flare=-10;});nextFlare=time+4;}
   function clear(){cancelActivity();letters.forEach(g=>setRestFace(g,0));resetButton.disabled=true;}
   function pulse(x,y){if(!ready||disabled||lost)return;if(waves.length===3)waves.shift();waves.push({x:x/width,y:y/height,at:time,touched:new Set()});resetButton.disabled=false;}
   function leaveGlyph(){
@@ -219,7 +230,7 @@ window.createLetterScene = function () {
     hovered=null;
   }
   function hit(e){
-    const r=canvas.getBoundingClientRect();pointer.x=e.clientX-r.x;pointer.y=e.clientY-r.y;
+    const r=canvas.getBoundingClientRect();pointer.x=e.clientX-r.x;pointer.y=e.clientY-r.y;pointer.active=true;
     const next=letters.find(g=>Math.abs(pointer.x-g.x)<g.hitWidth/2&&Math.abs(pointer.y-g.y)<em*.55)||null;
     if(next!==hovered){
       leaveGlyph();hovered=next;
@@ -230,7 +241,7 @@ window.createLetterScene = function () {
     }
   }
   hero.addEventListener('pointermove',e=>{if(e.pointerType!=='touch')hit(e);});
-  hero.addEventListener('pointerleave',leaveGlyph);
+  hero.addEventListener('pointerleave',()=>{leaveGlyph();pointer.active=false;});
   let down=null;
   hero.addEventListener('pointerdown',e=>{
     if(e.button!==0||e.isPrimary===false||e.target.closest('button,a'))return;
