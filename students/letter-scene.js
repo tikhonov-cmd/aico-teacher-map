@@ -5,11 +5,16 @@ window.createLetterScene = function () {
   const title = document.getElementById('hero-title');
   const resetButton = document.getElementById('reset-type');
   const faces = [
-    { family: 'YS Geo Thin', weight: 200 },
+    { family: 'YS Display Light', weight: 300 },
     { family: 'Yeseva One', weight: 400 },
     { family: 'Playfair Display', weight: 900 },
     { family: 'Unbounded', weight: 900 },
-    { family: 'Ruslan Display', weight: 400 }
+    { family: 'Ruslan Display', weight: 400 },
+    { family: 'Caveat', weight: 600, style: 'normal' },
+    { family: 'Lobster', weight: 400, style: 'normal' },
+    { family: 'Old Standard TT', weight: 400, style: 'italic' },
+    { family: 'Press Start 2P', weight: 400, style: 'normal' },
+    { family: 'Rubik Mono One', weight: 400, style: 'normal' }
   ];
   const letters = [];
   title.querySelectorAll('.title-line').forEach((line, row) => {
@@ -43,7 +48,7 @@ window.createLetterScene = function () {
     g.face=face;
     if(g===hovered)g.hoverFace=face;
     g.el.style.fontFamily=faces[face].family;
-    g.el.style.fontWeight=faces[face].weight;
+    g.el.style.fontWeight=faces[face].weight;g.el.style.fontStyle=faces[face].style||'normal';
   }
   function stopBurst(){burstUntil=0;phraseTaps=0;hero.dataset.burst='idle';}
   function phraseTap(){
@@ -79,24 +84,24 @@ window.createLetterScene = function () {
       float c=cos(uAngle),s=sin(uAngle);p=mat2(c,-s,s,c)*p+uCenter;
       vPage=p/uRes;gl_Position=vec4(vPage*vec2(2,-2)+vec2(-1,1),0,1);}`;
   const fragment = `precision highp float;varying vec2 vLocal,vPage;
-    uniform sampler2D uAtlas;uniform float uChar,uRows,uFace,uEnergy,uSize,uScale,uSeed;uniform vec3 uInk;
+    uniform sampler2D uAtlas;uniform float uChar,uRows,uCount,uFace,uEnergy,uSize,uScale,uSeed;uniform vec3 uInk;
     ${common}
     float sampleFace(vec2 p,float face){
       if(p.x<0.0||p.x>1.0||p.y<0.0||p.y>1.0)return 0.0;
       vec2 cell=vec2(mod(uChar,8.0),floor(uChar/8.0)+face*uRows);
-      return texture2D(uAtlas,(cell+p)/vec2(8.0,uRows*5.0)).a;
+      return texture2D(uAtlas,(cell+p)/vec2(8.0,uRows*uCount)).a;
     }
     void main(){vec2 push;float wave=ripple(vPage,push);
       vec2 p=vLocal-push*.05;
       float e=clamp(uEnergy+wave*.8,0.0,1.0);
       p+=vec2(noise(vPage*vec2(13.0,9.0)+uTime*.35)-.5,
               noise(vPage*vec2(11.0,8.0)-uTime*.3+17.0)-.5)*e*e*.028;
-      float waveFace=2.0+2.0*sin(uTime*5.5+uSeed*31.0);
-      float f=clamp(mix(uFace,waveFace,smoothstep(.035,.28,wave)),0.0,4.0),fi=floor(f);
+      float last=uCount-1.0;float waveFace=last*.5*(1.0+sin(uTime*5.5+uSeed*31.0));
+      float f=clamp(mix(uFace,waveFace,smoothstep(.035,.28,wave)),0.0,last),fi=floor(f);
       float blend=smoothstep(.27,.73,fract(f));
       // Each pixel belongs to one complete face: no pale double-image crossfade.
       float n=noise(vLocal*8.0+uTime*.15);
-      float chosen=min(4.0,fi+step(n,blend));
+      float chosen=min(last,fi+step(n,blend));
       float mask=sampleFace(p,chosen);
       gl_FragColor=vec4(mix(uInk,vec3(.14,.28,.78),e*.12),mask);
     }`;
@@ -120,14 +125,15 @@ window.createLetterScene = function () {
     const a = gl.getAttribLocation(p, 'aPosition');gl.enableVertexAttribArray(a);gl.vertexAttribPointer(a,2,gl.FLOAT,false,0,0);
   }
   function makeAtlas() {
-    const tile = width < 600 ? 128 : 256;
+    const tile = Math.min(width < 600 ? 128 : 256,Math.floor(gl.getParameter(gl.MAX_TEXTURE_SIZE)/(rows*faces.length)));
     const atlas = document.createElement('canvas');atlas.width=columns*tile;atlas.height=rows*faces.length*tile;
     const ctx=atlas.getContext('2d');ctx.fillStyle='#fff';ctx.textAlign='center';ctx.textBaseline='alphabetic';
     faces.forEach((font,f)=>{
-      ctx.font=`${font.weight} 160px "${font.family}"`;
+      ctx.font=`${font.style||'normal'} ${font.weight} 160px "${font.family}"`;
       const xHeight=ctx.measureText('о').actualBoundingBoxAscent||84;
-      const size=160*(tile*.325/xHeight);
-      ctx.font=`${font.weight} ${size}px "${font.family}"`;
+      const widest=Math.max(...chars.map(c=>ctx.measureText(c).width));
+      const size=Math.min(160*(tile*.325/xHeight),160*tile*.68/widest);
+      ctx.font=`${font.style||'normal'} ${font.weight} ${size}px "${font.family}"`;
       chars.forEach((char,i)=>ctx.fillText(char,(i%columns+.5)*tile,(f*rows+Math.floor(i/columns)+.65625)*tile));
     });
     gl.bindTexture(gl.TEXTURE_2D,texture);gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,false);
@@ -149,7 +155,7 @@ window.createLetterScene = function () {
     const burstEnvelope=burstUntil?Math.min(1,burstAge/.25,(burstUntil-now)/500):0;
     gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);gl.enable(gl.BLEND);gl.blendFuncSeparate(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA,gl.ONE,gl.ONE_MINUS_SRC_ALPHA);
     const data=waveData();use(background);gl.uniform2f(bgUniforms.uRes,width,height);gl.uniform1f(bgUniforms.uTime,time);gl.uniform4fv(bgUniforms['uWaves[0]'],data);gl.drawArrays(gl.TRIANGLES,0,6);
-    use(program);gl.uniform2f(uniforms.uRes,width,height);gl.uniform1f(uniforms.uTime,time);gl.uniform4fv(uniforms['uWaves[0]'],data);gl.uniform1f(uniforms.uRows,rows);gl.uniform1i(uniforms.uAtlas,0);
+    use(program);gl.uniform2f(uniforms.uRes,width,height);gl.uniform1f(uniforms.uTime,time);gl.uniform4fv(uniforms['uWaves[0]'],data);gl.uniform1f(uniforms.uRows,rows);gl.uniform1f(uniforms.uCount,faces.length);gl.uniform1i(uniforms.uAtlas,0);
     for(const g of letters){
       // A wave commits one new resting face as its front reaches this letter.
       for(const w of waves){
@@ -161,7 +167,7 @@ window.createLetterScene = function () {
       const age=time-g.flare;const flare=age>=0&&age<3.0?Math.pow(Math.sin(Math.PI*age/3.0),.8):0;
       const target=g===hovered?.86:0;g.energy+=(target-g.energy)*(1-Math.exp(-dt*5));
       const energy=Math.max(g.energy,flare*.9);
-      const interactionFace=g===hovered&&g.hoverFace!=null?g.hoverFace:(g.face+1+Math.floor(g.seed*4))%faces.length;
+      const interactionFace=g===hovered&&g.hoverFace!=null?g.hoverFace:(g.face+1+Math.floor(g.seed*(faces.length-1)))%faces.length;
       let face=g.face+(interactionFace-g.face)*Math.min(1,energy/.75);
       let hop=0;
       if(burstUntil){
@@ -239,12 +245,12 @@ window.createLetterScene = function () {
   canvas.addEventListener('webglcontextrestored',()=>{lost=false;boot();});
   function boot(){try{
     program=makeProgram(vertex,fragment);background=makeProgram(bgVertex,bgFragment);
-    uniforms=locations(program,['uRes','uTime','uWaves[0]','uRows','uAtlas','uCenter','uSize','uScale','uAngle','uChar','uFace','uEnergy','uSeed','uInk']);
+    uniforms=locations(program,['uRes','uTime','uWaves[0]','uRows','uCount','uAtlas','uCenter','uSize','uScale','uAngle','uChar','uFace','uEnergy','uSeed','uInk']);
     bgUniforms=locations(background,['uRes','uTime','uWaves[0]']);
     buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(quad),gl.STATIC_DRAW);
     texture=gl.createTexture();ready=true;resize();sync();
   }catch(error){ready=false;sync();console.warn('Letter scene uses static fallback:',error.message);}}
-  if(gl)Promise.all(faces.map(f=>document.fonts.load(`${f.weight} 100px "${f.family}"`,chars.join('')))).then(boot).catch(()=>sync());
+  if(gl)Promise.all(faces.map(f=>document.fonts.load(`${f.style||'normal'} ${f.weight} 100px "${f.family}"`,chars.join('')))).then(boot).catch(()=>sync());
   return {
     setMotion(off){disabled=off;if(off)cancelActivity();sync();},
     shuffle(){letters.forEach(g=>setRestFace(g,randomFace(g.face)));resetButton.disabled=false;},
