@@ -250,7 +250,10 @@ window.createLetterScene = function () {
     buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(quad),gl.STATIC_DRAW);
     texture=gl.createTexture();ready=true;resize();sync();
   }catch(error){ready=false;sync();console.warn('Letter scene uses static fallback:',error.message);}}
-  if(gl)Promise.all(faces.map(f=>document.fonts.load(`${f.style||'normal'} ${f.weight} 100px "${f.family}"`,chars.join('')))).then(boot).catch(()=>sync());
+  if(gl)Promise.all(faces.map(async f=>{
+    const loaded=await document.fonts.load(`${f.style||'normal'} ${f.weight} 100px "${f.family}"`,chars.join(''));
+    if(!loaded.length)throw new Error(`Font unavailable: ${f.family}`);
+  })).then(boot).catch(error=>{sync();console.warn(error.message);});
   return {
     setMotion(off){disabled=off;if(off)cancelActivity();sync();},
     shuffle(){letters.forEach(g=>setRestFace(g,randomFace(g.face)));resetButton.disabled=false;},
