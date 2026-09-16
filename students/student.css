@@ -260,3 +260,11 @@ html[data-motion=off]::view-transition-old(root),html[data-motion=off]::view-tra
 .case-fields input{display:block;width:100%;min-height:44px;margin-top:6px;padding:10px 12px;border:1px solid var(--rule);border-radius:6px;background:var(--paper);color:var(--ink);font:inherit;font-variant-numeric:tabular-nums}
 .case-fields input[aria-invalid=true]{border-color:#bd682b}
 .help-brand{display:block;width:40px;height:40px;margin-top:28px;filter:invert(1)}
+
+.education-brand{display:block;flex:none;width:180px;height:auto;aspect-ratio:505 / 73;margin-left:auto}
+@media(max-width:600px){
+ .site-header{display:grid;grid-template-columns:1fr auto;column-gap:20px;row-gap:0;padding-top:8px}
+ .education-brand{grid-column:2;grid-row:1;width:152px}
+ .top-nav{grid-column:1 / -1;grid-row:2;gap:24px}
+ .hero{min-height:calc(100svh - 97px)}
+}
