@@ -332,3 +332,5 @@ html[data-motion=off]::view-transition-old(root),html[data-motion=off]::view-tra
 .route-page .route-title{max-width:none}
 .route-page .route-nav li:first-child .route-button{padding-left:12px}
 @media(max-width:700px){.route-page .route-nav li:first-child .route-button{padding-left:8px}}
+
+#route-navigation .route-footnote{margin:16px 12px 0;padding-top:16px;border-top:1px solid var(--rule);font-size:12px;line-height:1.5;max-width:none}
