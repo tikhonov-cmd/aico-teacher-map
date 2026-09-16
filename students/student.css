@@ -68,10 +68,15 @@ button svg,a svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-wid
 .product-demo>h2{margin-bottom:12px}
 .product-intro{font-size:16px;max-width:76ch;margin-bottom:8px}
 .demo-invitation{font-size:14px;color:var(--muted);max-width:88ch;margin-bottom:24px}
-.demo-workbench{display:grid;grid-template-columns:240px minmax(0,1fr);gap:24px;align-items:start}
+.demo-workbench{--controls-width:264px}
+.demo-panel{display:grid;grid-template-columns:var(--controls-width) minmax(0,1fr);border:1px solid var(--rule);border-radius:var(--radius);overflow:clip}
+.demo-panel:has(.demo-controls[hidden]){grid-template-columns:1fr}
+.demo-controls{padding:24px 20px}
+.demo-result{background:var(--surface);border-left:1px solid var(--rule)}
 .demo-controls,.demo-result{min-width:0}
 .demo-choice-row{padding:16px 0;border-bottom:1px solid var(--rule)}
 .demo-choice-row:first-child{padding-top:0}
+.demo-choice-row:last-child{border-bottom:0;padding-bottom:0}
 .demo-label{display:block;font-size:14px;line-height:1.4;font-weight:600;margin-bottom:8px}
 .demo-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
 .demo-options button{min-height:44px;min-width:0;padding:8px;border:1px solid transparent;border-radius:6px;background:transparent;font-size:14px;line-height:1.35;white-space:normal;overflow-wrap:anywhere}
@@ -81,14 +86,14 @@ button svg,a svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-wid
 .demo-options-secondary:has([data-level]){grid-template-columns:1fr}
 .demo-options-secondary:has([data-level]) button{text-align:left;padding-inline:12px}
 .demo-control-note{font-size:12px;line-height:1.5;color:var(--muted);margin:8px 0 0}
-.demo-preview{background:var(--surface);border-radius:var(--radius);padding:24px}
+.demo-preview{padding:24px}
 .demo-preview>h3{font-size:24px;margin-bottom:8px}
 .demo-purpose{font-size:14px;line-height:1.5;color:var(--muted);margin-bottom:16px}
 .demo-content{border-top:1px solid var(--rule);padding-top:16px}
 .demo-content h4{font-size:20px;margin-bottom:12px}
 .demo-content p{font-size:16px;line-height:1.5;margin-bottom:12px}
 .demo-content p:last-child{margin-bottom:0}
-.demo-caption{font-size:12px;line-height:1.5;color:var(--muted);text-align:left;margin:12px 0 0}
+.demo-caption{font-size:12px;line-height:1.5;color:var(--muted);text-align:left;margin:12px 0 0 calc(var(--controls-width) + 1px)}
 .demo-answers,.demo-chat-questions{display:grid;grid-template-columns:1fr;gap:8px;margin-top:12px}
 .demo-answers button,.demo-chat-questions button{min-height:44px;padding:10px 12px;font-size:14px;line-height:1.4;text-align:left;text-wrap:balance;border:1px solid var(--rule);border-radius:6px;background:var(--paper)}
 .demo-answers button:hover,.demo-chat-questions button:hover{border-color:var(--blue)}
@@ -128,11 +133,11 @@ summary:hover{color:var(--blue)}
 details[open] .vertical{display:none}
 .faq p,.data-disclosure p{color:var(--muted);margin:0 0 16px}
 .faq p:last-child,.data-disclosure p:last-child{margin-bottom:24px}
-.route-invitation{display:flex;align-items:center;justify-content:space-between;gap:24px;margin:16px 0 32px;padding:28px;background:var(--blue);color:var(--paper);border-radius:var(--radius);text-decoration:none;transition:background .2s}
-.route-invitation strong{display:block;font-size:32px;line-height:1.2;font-weight:500;letter-spacing:-.025em;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:7px;margin-bottom:12px}
-.route-invitation span span{display:block;font-size:16px;line-height:1.5;text-wrap:balance}
-.route-invitation svg{width:40px;height:40px;transition:transform .25s}
-.route-invitation:hover{background:var(--blue-hover)}.route-invitation:hover svg{transform:translateX(6px)}
+.route-invitation{display:flex;align-items:center;justify-content:space-between;gap:24px;margin:16px 0 32px;padding:28px;background:linear-gradient(115deg,rgba(255,255,255,.78),rgba(255,255,255,.24) 55%,rgba(36,71,238,.055));color:var(--ink);border:1px solid rgba(137,157,173,.34);border-radius:var(--radius);box-shadow:inset 0 1px 0 rgba(255,255,255,.9);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);text-decoration:none;transition:border-color .2s,background-color .2s}
+.route-invitation strong{display:block;font-size:28px;line-height:1.2;font-weight:500;letter-spacing:-.025em;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:7px;margin-bottom:12px}
+.route-invitation span span{display:block;color:var(--muted);font-size:16px;line-height:1.5;text-wrap:balance}
+.route-invitation svg{color:var(--blue);width:40px;height:40px;transition:transform .25s}
+.route-invitation:hover{background-color:rgba(255,255,255,.5);border-color:rgba(36,71,238,.4)}.route-invitation:hover svg{transform:translateX(6px)}
 #questions{border-top:0;padding-top:0}
 .text-link{display:inline-flex;align-items:center;gap:12px;min-height:44px;padding:8px 0;font-size:16px;line-height:1.5;text-decoration:underline}
 .text-link:hover{color:var(--blue)}
@@ -177,13 +182,17 @@ details[open] .vertical{display:none}
 @keyframes page-out{to{opacity:0;transform:translateY(-8px)}}
 @keyframes page-in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 @media(max-width:1050px){
- .demo-workbench{grid-template-columns:200px minmax(0,1fr);gap:20px}
+ .demo-workbench{--controls-width:244px}
  .route-workspace{grid-template-columns:240px minmax(0,1fr);gap:20px}
 }
 @media(max-width:760px){
  .site-header{gap:24px}.top-nav{gap:20px}
  .hero-title{font-size:min(13.4vw,18svh)}
- .demo-workbench,.route-workspace{grid-template-columns:1fr;gap:20px}
+ .route-workspace{grid-template-columns:1fr;gap:20px}
+ .demo-panel{grid-template-columns:1fr}
+ .demo-controls{padding:20px}
+ .demo-result{border-left:0;border-top:1px solid var(--rule)}
+ .demo-caption{margin-left:0}
  .demo-choice-row{display:grid;grid-template-columns:128px minmax(0,1fr);gap:8px 12px;align-items:center;padding:8px 0}
  .demo-label{margin:0}.demo-options,.demo-options-secondary:has([data-level]){display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);grid-template-columns:none}
  .demo-options-secondary:has([data-level]) button{text-align:center;padding:8px}
