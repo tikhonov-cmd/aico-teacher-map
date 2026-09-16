@@ -2,7 +2,6 @@
    Causal-inference reference: https://www.worldbank.org/en/programs/sief-trust-fund/publication/impact-evaluation-in-practice */
 window.createProductDemo = function (onChange) {
   const $ = id => document.getElementById(id);
-  let panelSizer;
   const state = { format: 'read', level: 0, interest: 'plain', question: 0 };
   const names = { read: 'Лонгрид', test: 'Тест', case: 'Кейс', chat: 'Чат' };
   const levels = [
@@ -47,7 +46,7 @@ window.createProductDemo = function (onChange) {
   const formats = {
     read: ['Разобраться в теме до лекции', 'Прочитай объяснение в удобной тебе подаче.'],
     test: ['Проверить, что уже понятно', 'Три самостоятельных вопроса. Всё нужное есть в условиях — лонгрид читать необязательно.'],
-    case: ['Попробовать знания в деле', 'Примени идею к новой ситуации, затем сравни своё решение с разбором.'],
+    case: ['Попробовать знания в деле', 'Пройди три шага: выбери показатель, посчитай результат и реши, что делать дальше.'],
     chat: ['Разобрать то, что осталось непонятным', 'В AICO можно задать свой вопрос. Здесь выбери один из примеров.']
   };
   function paragraphs(items) { return items.map(text => `<p>${text}</p>`).join(''); }
@@ -110,8 +109,50 @@ window.createProductDemo = function (onChange) {
     const q = quizQuestions[state.question];
     return `<p class="demo-progress">Вопрос ${state.question + 1} из ${quizQuestions.length}</p><h4>${q.title}</h4>${paragraphs([q.context])}<div class="demo-answers" role="group" aria-label="Выбери ответ">${q.answers.map((label, i) => `<button type="button" data-answer="${i}" aria-pressed="false">${label}</button>`).join('')}</div><div id="quiz-feedback" class="demo-feedback" role="status" aria-live="polite" hidden></div><button type="button" class="demo-action" id="next-question">${state.question < quizQuestions.length - 1 ? 'Следующий вопрос' : 'К первому вопросу'}</button>`;
   }
+  const caseState = { step: 0, passed: [false, false, false] };
+  const caseChoices = [
+    {
+      title: 'Что считать успехом?',
+      prompt: 'Цель редакции — больше дослушанных выпусков. Какой показатель выберешь до начала теста?',
+      answers: ['Долю открывших выпуск среди увидевших анонс.', 'Долю дослушавших среди всех, кому показали анонс.', 'Долю дослушавших только среди открывших выпуск.'],
+      correct: 1,
+      feedback: ['Открытие — лишь первый шаг. Заголовок может привлечь клики, но не привести к дослушиванию.', 'Этот показатель учитывает весь путь от анонса до конца выпуска. Знаменатель — вся группа, которой показали вариант.', 'Так мы исключим тех, кто не открыл выпуск. А заголовок влияет и на открытие: сравнение только слушателей потеряет часть его эффекта.']
+    },
+    null,
+    {
+      title: 'Выбирать победителя уже можно?',
+      prompt: 'У A дослушали 8%, у B — 6,4%. Редактор предлагает сразу заменить все анонсы на A. Что ответишь?',
+      answers: ['Согласен: любое преимущество означает, что A надёжно лучше.', 'Лучше выбрать B: он привёл больше открытий.', 'A впереди в этих данных. Сначала оценим неопределённость разницы и сверимся с заранее заданным правилом решения.'],
+      correct: 2,
+      feedback: ['Наблюдаемая разница могла частично возникнуть случайно. Одних процентов недостаточно для уверенного вывода.', 'Открытий больше, но цель — дослушивания. По выбранному показателю B сейчас уступает.', 'Разница — 1,6 процентного пункта в пользу A. Для решения нужна оценка её точности, например доверительный интервал, и заранее выбранный порог полезного эффекта.']
+    }
+  ];
+  function feedback(element, correct, explanation) {
+    element.dataset.result = correct ? 'correct' : 'incorrect';
+    element.innerHTML = `<p><strong>${correct ? 'Верно.' : 'Неверно.'}</strong> ${explanation.replace(/^Верно[.:]\s*/, '')}</p>`;
+    element.hidden = false;
+  }
+  function markAnswer(button, selector, correct) {
+    document.querySelectorAll(selector).forEach(b => {
+      b.setAttribute('aria-pressed', String(b === button));
+      delete b.dataset.result;
+    });
+    button.dataset.result = correct ? 'correct' : 'incorrect';
+  }
   function caseStudy() {
-    return `<h4>Кликнули чаще. А дослушали?</h4><p>Редакция научного подкаста проверяет два заголовка анонса. Цель — чтобы больше студентов дослушали выпуск. 2000 студентов случайно разделили на две группы по 1000; выпуск, место и время показа одинаковые.</p><table class="demo-table"><caption>Условные данные. В каждой группе анонс увидели 1000 человек.</caption><thead><tr><th scope="col">Заголовок</th><th scope="col">Открыли</th><th scope="col">Дослушали</th></tr></thead><tbody><tr><th scope="row">A: «Как спят птицы»</th><td>100</td><td>80</td></tr><tr><th scope="row">B: «Сон на лету — это как?»</th><td>160</td><td>64</td></tr></tbody></table><p><strong>Твоё решение.</strong> Какой заголовок ближе к цели в этих данных? Почему больше открытий ещё не означает лучший результат?</p><button type="button" class="demo-action" id="case-reveal" aria-expanded="false" aria-controls="case-feedback">Показать разбор</button><div id="case-feedback" class="demo-feedback" hidden><p>По выбранной цели впереди A: выпуск дослушали 80 / 1000 = 8%, в B — 64 / 1000 = 6,4%. Разница — 1,6 процентного пункта в пользу A. Заголовок B дал больше открытий, но меньше дослушиваний.</p><p>Знаменатель — все, кому показали анонс. Сравнение только открывших отвечает на другой вопрос. Это пока наблюдаемый результат: для решения о победителе нужно оценить неопределённость разницы.</p></div>`;
+    const step = caseState.step;
+    if (step === 3) return `<p class="demo-progress">Кейс завершён · 3 шага</p><h4>Клики — ещё не цель</h4><p>Ты выбрал долю дослушавших среди всех увидевших анонс: <strong>A — 8%, B — 6,4%</strong>. Преимущество A в этих данных — 1,6 процентного пункта.</p><p>B привлёк больше открытий, но до конца выпуска дошло меньше людей. Поэтому сначала выбираем показатель под задачу, затем сравниваем доли и оцениваем неопределённость.</p><p><strong>Следующий шаг редакции:</strong> рассчитать доверительный интервал разницы и принять решение по заранее выбранному правилу. Эти данные сами по себе ещё не объявляют победителя.</p><button type="button" class="demo-action" id="case-restart">Пройти заново</button>`;
+    const table = `<table class="demo-table"><caption>Условные данные. В каждой группе анонс увидели 1000 человек.</caption><thead><tr><th scope="col">Заголовок</th><th scope="col">Открыли</th><th scope="col">Дослушали</th></tr></thead><tbody><tr><th scope="row">A: «Как спят птицы»</th><td>100</td><td>80</td></tr><tr><th scope="row">B: «Сон на лету — это как?»</th><td>160</td><td>64</td></tr></tbody></table>`;
+    const task = step === 1
+      ? `<h4>Кликнули чаще. А дослушали?</h4><p>2000 студентов случайно разделили на две группы по 1000. Выпуск, место и время показа одинаковые; различаются только заголовки.</p>${table}<p>Посчитай долю дослушавших <strong>среди всех увидевших анонс</strong> в каждой группе.</p><form id="case-calculation" novalidate><div class="case-fields"><label for="case-rate-a">Вариант A, %<input id="case-rate-a" name="rateA" inputmode="decimal" type="text" autocomplete="off" aria-describedby="case-feedback"></label><label for="case-rate-b">Вариант B, %<input id="case-rate-b" name="rateB" inputmode="decimal" type="text" autocomplete="off" aria-describedby="case-feedback"></label></div><button class="demo-action" type="submit">Проверить расчёт</button></form>`
+      : `<h4>${caseChoices[step].title}</h4>${step === 0 ? '<p>Ты помогаешь редакции научного подкаста сравнить два заголовка анонса одного выпуска: A — «Как спят птицы», B — «Сон на лету — это как?».</p>' : ''}<p>${caseChoices[step].prompt}</p><div class="demo-answers" role="group" aria-label="Твоё решение">${caseChoices[step].answers.map((label,i)=>`<button type="button" data-case-answer="${i}" aria-pressed="false">${label}</button>`).join('')}</div>`;
+    return `<p class="demo-progress">Шаг ${step + 1} из 3 · ${['Выбираем показатель', 'Считаем результат', 'Принимаем решение'][step]}</p>${task}<div id="case-feedback" class="demo-feedback" role="status" aria-live="polite" hidden></div><button type="button" class="demo-action" id="case-next" hidden>${step === 2 ? 'Собрать вывод' : 'Следующий шаг'}</button>`;
+  }
+  function advanceCase() {
+    render();
+    const heading = $('demo-content').querySelector('h4');
+    heading.setAttribute('tabindex', '-1'); heading.focus({ preventScroll: true });
+    onChange(null, caseState.step === 3 ? 'Кейс завершён.' : `Шаг ${caseState.step + 1} из 3.`);
   }
   const questions = [
   "Зачем распределять случайно, если люди всё равно разные?",
@@ -147,7 +188,6 @@ window.createProductDemo = function (onChange) {
     $('demo-purpose').textContent = formats[state.format][1];
     $('demo-content').innerHTML = state.format === 'read' ? read(themes[state.interest]) : state.format === 'case' ? caseStudy() : state.format === 'test' ? quiz() : chat();
     for (const key of ['format', 'level', 'interest']) document.querySelectorAll(`[data-${key}]`).forEach(b => b.setAttribute('aria-pressed', String(b.dataset[key] === String(state[key]))));
-    panelSizer?.fit();
   }
   $('demo-controls').hidden = false;
   $('demo-controls').addEventListener('click', e => {
@@ -167,47 +207,50 @@ window.createProductDemo = function (onChange) {
   $('demo-content').addEventListener('click', e => {
     const button = e.target.closest('button'); if (!button) return;
     if (button.dataset.answer !== undefined) {
-      document.querySelectorAll('[data-answer]').forEach(b => b.setAttribute('aria-pressed', String(b === button)));
       const answer = Number(button.dataset.answer), q = quizQuestions[state.question];
-      $('quiz-feedback').innerHTML = paragraphs([q.feedback[answer]]); $('quiz-feedback').hidden = false;
+      markAnswer(button, '[data-answer]', answer === q.correct);
+      feedback($('quiz-feedback'), answer === q.correct, q.feedback[answer]);
     } else if (button.id === 'next-question') {
       state.question = (state.question + 1) % quizQuestions.length; render();
       $('demo-content').querySelector('h4').setAttribute('tabindex', '-1');
       $('demo-content').querySelector('h4').focus({preventScroll:true});
       onChange(null, `Вопрос ${state.question + 1} из ${quizQuestions.length}.`);
-    } else if (button.id === 'case-reveal') {
-      const open = button.getAttribute('aria-expanded') !== 'true'; button.setAttribute('aria-expanded', String(open)); button.textContent = open ? 'Скрыть разбор' : 'Показать разбор'; $('case-feedback').hidden = !open;
+    } else if (button.dataset.caseAnswer !== undefined) {
+      const q = caseChoices[caseState.step], answer = Number(button.dataset.caseAnswer);
+      const correct = answer === q.correct;
+      markAnswer(button, '[data-case-answer]', correct);
+      feedback($('case-feedback'), correct, q.feedback[answer]);
+      caseState.passed[caseState.step] = correct;
+      $('case-next').hidden = !correct;
+    } else if (button.id === 'case-next' && caseState.passed[caseState.step]) {
+      caseState.step++; advanceCase();
+    } else if (button.id === 'case-restart') {
+      caseState.step = 0; caseState.passed.fill(false); advanceCase();
     } else if (button.dataset.question !== undefined) {
       document.querySelectorAll('[data-question]').forEach(b => b.setAttribute('aria-pressed', String(b === button)));
       $('chat-reply').innerHTML = paragraphs([replies[Number(button.dataset.question)][state.level]]); $('chat-reply').hidden = false;
     }
-    panelSizer?.fit();
+  });
+  $('demo-content').addEventListener('submit', e => {
+    if (e.target.id !== 'case-calculation') return;
+    e.preventDefault();
+    const inputs = [$('case-rate-a'), $('case-rate-b')];
+    const values = inputs.map(input => input.value.trim().replace(',', '.'));
+    const valid = values.map(value => /^\d+(?:\.\d+)?$/.test(value));
+    const correct = valid.every(Boolean) && Number(values[0]) === 8 && Number(values[1]) === 6.4;
+    inputs.forEach((input,i) => input.setAttribute('aria-invalid', String(!valid[i] || Number(values[i]) !== [8, 6.4][i])));
+    caseState.passed[1] = correct;
+    feedback($('case-feedback'), correct, correct
+      ? 'A: 80 / 1000 × 100 = 8%. B: 64 / 1000 × 100 = 6,4%. У B больше открытий, но доля дослушавших ниже.'
+      : !valid.every(Boolean) ? 'Введи два числа в процентах. Дробную часть можно отделить точкой или запятой.'
+      : 'Раздели число дослушавших на всех 1000 увидевших анонс и умножь на 100. Число открывших здесь не знаменатель. Попробуй ещё раз.');
+    $('case-next').hidden = !correct;
+  });
+  $('demo-content').addEventListener('input', e => {
+    if (!e.target.closest('#case-calculation')) return;
+    caseState.passed[1] = false; $('case-next').hidden = true;
+    $('case-feedback').hidden = true;
+    e.target.removeAttribute('aria-invalid');
   });
   render();
-  window.stabilizePanel($('demo-controls'),(clone,sample)=>{
-    clone.querySelectorAll('[hidden]').forEach(el=>el.hidden=false);
-    for(const note of levels){clone.querySelector('#level-note').textContent=note;sample();}
-  });
-  panelSizer=window.stabilizePanel(document.querySelector('.demo-preview'), (clone, sample) => {
-    const saved={...state};
-    function measure(format,html,size='expanded'){
-      clone.querySelector('#response-title').textContent=formats[format][0];
-      clone.querySelector('#demo-purpose').textContent=formats[format][1];
-      clone.querySelector('#demo-content').innerHTML=html;
-      sample(size);
-    }
-    try {
-      measure('chat',chat(),'compact');
-      measure('case',caseStudy(),'compact');
-      for(state.level=0;state.level<3;state.level++){
-        for(const theme of Object.values(themes))measure('read',read(theme),state.level===0?'compact':'expanded');
-        for(const reply of replies)measure('chat',chat().replace('<div id="chat-reply" class="demo-feedback" aria-live="polite" hidden></div>',`<div class="demo-feedback">${paragraphs([reply[state.level]])}</div>`));
-      }
-      for(state.question=0;state.question<quizQuestions.length;state.question++){
-        measure('test',quiz(),'compact');
-        for(const feedback of quizQuestions[state.question].feedback)measure('test',quiz().replace('<div id="quiz-feedback" class="demo-feedback" role="status" aria-live="polite" hidden></div>',`<div class="demo-feedback">${paragraphs([feedback])}</div>`));
-      }
-      measure('case',caseStudy().replace('id="case-feedback" class="demo-feedback" hidden','id="case-feedback" class="demo-feedback"').replace('Показать разбор','Скрыть разбор'));
-    } finally {Object.assign(state,saved);}
-  },{twoSizes:true});
 };
