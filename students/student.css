@@ -260,7 +260,8 @@ html[data-motion=off]::view-transition-old(root),html[data-motion=off]::view-tra
 .case-fields input{display:block;width:100%;min-height:44px;margin-top:6px;padding:10px 12px;border:1px solid var(--rule);border-radius:6px;background:var(--paper);color:var(--ink);font:inherit;font-variant-numeric:tabular-nums}
 .case-fields input[aria-invalid=true]{border-color:#bd682b}
 
-.education-brand{display:block;flex:none;width:138px;height:auto;aspect-ratio:505 / 73;margin-left:auto}
+.education-brand{display:flex;align-items:center;flex:none;width:138px;min-height:44px;margin-left:auto}
+.education-brand img{display:block;width:100%;height:auto;aspect-ratio:505 / 73}
 @media(max-width:600px){
  .site-header{display:grid;grid-template-columns:1fr auto;column-gap:20px;row-gap:0;padding-top:8px}
  .education-brand{grid-column:2;grid-row:1;width:132px}
