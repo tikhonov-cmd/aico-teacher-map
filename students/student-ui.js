@@ -8,7 +8,7 @@ const letterScene=window.createLetterScene();
 $('reshape').addEventListener('click',()=>{letterScene.shuffle();$('announcer').textContent='Буквы заголовка набраны разными шрифтами.';});
 $('reset-type').addEventListener('click',()=>{letterScene.reset();$('reshape').focus({preventScroll:true});$('announcer').textContent='Буквы снова набраны исходным шрифтом.';});
 $('wave-type').addEventListener('click',()=>{if(motionOff){$('announcer').textContent='Движение выключено.';return;}letterScene.pulse();});
-function setMotion(){motionOff=manualOff||reduced.matches;document.documentElement.dataset.motion=motionOff?'off':'on';$('motion-toggle').setAttribute('aria-pressed',String(motionOff));$('motion-label').textContent=motionOff?'Движение выключено':'Без движения';$('type-hint').textContent='Нажми на фразу. Пять нажатий включают быстрый ритм.';if(motionOff){document.getAnimations().forEach(a=>a.cancel());}letterScene.setMotion(motionOff);}
+function setMotion(){motionOff=manualOff||reduced.matches;document.documentElement.dataset.motion=motionOff?'off':'on';$('motion-toggle').setAttribute('aria-pressed',String(motionOff));$('motion-label').textContent=motionOff?'Движение выключено':'Без движения';$('type-hint').textContent='Нажми на фразу.';if(motionOff){document.getAnimations().forEach(a=>a.cancel());}letterScene.setMotion(motionOff);}
 $('motion-toggle').addEventListener('click',()=>{if(reduced.matches){$('announcer').textContent='Движение отключено в настройках устройства.';return;}manualOff=!manualOff;setMotion();});reduced.addEventListener('change',setMotion);
 window.createProductDemo((button,message)=>{animateContent($('demo-content'));$('announcer').textContent=message;});
 setMotion();

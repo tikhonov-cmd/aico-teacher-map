@@ -54,10 +54,10 @@ window.createLetterScene = function () {
     if(!ready||disabled||lost||burstUntil)return;
     phraseTaps++;
     if(phraseTaps===5){
-      phraseTaps=0;burstStarted=performance.now();burstUntil=burstStarted+5000;
+      phraseTaps=0;burstStarted=performance.now();burstUntil=burstStarted+3000;
       letters.forEach(g=>{g.burstStep=-Infinity;g.burstFace=g.face;g.burstTarget=g.face;});
       hero.dataset.burst='active';resetButton.disabled=false;
-      document.getElementById('announcer').textContent='Быстрая волна на пять секунд.';
+      document.getElementById('announcer').textContent='Быстрая волна на три секунды.';
     }
   }
 
