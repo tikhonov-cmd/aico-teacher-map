@@ -246,3 +246,5 @@ html[data-motion=off]::view-transition-old(root),html[data-motion=off]::view-tra
 /* Paired page links share one rhythm without competing with the reading sections. */
 .page-invitations{display:grid;gap:12px;margin:16px 0 32px}
 .page-invitations .route-invitation{margin:0}
+
+.route-invitation--method{background-image:linear-gradient(115deg,rgba(255,255,255,.78),rgba(212,255,91,.045) 55%,rgba(212,255,91,.22))}
