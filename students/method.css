@@ -1,0 +1,64 @@
+/* The teacher method, in the shared student reading system. */
+.method-page .a-page{width:min(calc(100% - 2 * var(--gutter)),var(--wide));margin-inline:auto}
+.a-method-hero{padding-block:32px}
+.a-method-hero h1{font-size:clamp(32px,4vw,44px);margin-bottom:12px}
+.a-method-intro>p{max-width:76ch;color:var(--muted);font-size:16px}
+.a-status-key{display:flex;flex-wrap:wrap;gap:8px 24px;color:var(--muted);font-size:12px;line-height:1.5}
+.a-method-layout{display:grid;grid-template-columns:240px minmax(0,1fr);gap:40px;align-items:start}
+.a-method-index{position:sticky;top:24px}
+.a-method-index h2{font-size:16px;margin-bottom:12px}
+.a-method-index ol{list-style:none;padding:0;margin:0;border-top:1px solid var(--rule)}
+.a-method-index a{display:flex;align-items:center;min-height:44px;padding:10px 0;border-bottom:1px solid var(--rule);font-size:14px;line-height:1.4;text-decoration:none;color:var(--muted)}
+.a-method-index a:hover{color:var(--blue);text-decoration:underline}
+.a-method-content{min-width:0}
+.a-method-section{padding:32px 0;border-top:1px solid var(--rule);scroll-margin-top:24px}
+.a-method-section:first-child{padding-top:0;border-top:0}
+.a-section-head h2{font-size:28px;margin-bottom:16px}
+.a-section-head>p{font-size:16px;line-height:1.55;margin-bottom:24px}
+.a-method-content h3{font-size:18px;line-height:1.4;margin-bottom:8px}
+.a-method-content h4{font-size:16px;line-height:1.4;margin-bottom:8px}
+.a-method-content p{font-size:16px;line-height:1.55;text-wrap:pretty}
+.a-method-content p:last-child{margin-bottom:0}
+.a-method-content .a-section-head>p{margin-bottom:24px}
+.a-method-pair,.a-data-grid{border:1px solid var(--rule);border-radius:var(--radius);overflow:clip}
+.a-method-note,.a-data-column{padding:24px}
+.a-method-note:first-child,.a-data-column:first-child{background:var(--surface)}
+.a-method-note+.a-method-note,.a-data-column+.a-data-column{border-top:1px solid var(--rule)}
+.a-inline-status{display:block;color:var(--muted);font-size:12px;font-weight:400;line-height:1.5;letter-spacing:0;margin-top:4px}
+.a-method-content details{border-bottom:1px solid var(--rule)}
+.a-method-content details:first-child{border-top:1px solid var(--rule)}
+.a-method-content summary{position:relative;display:grid;grid-template-columns:32px minmax(0,1fr) 20px;gap:4px 12px;min-height:72px;padding:16px 0;font-size:16px;text-wrap:pretty}
+.a-design-code,.a-measure-code{grid-column:1;grid-row:1;align-self:start;color:var(--blue);font-size:14px;font-variant-numeric:tabular-nums;padding-top:2px}
+.a-design-title,.a-measure-title{grid-column:2;grid-row:1;font-weight:600}
+.a-design-row summary .a-inline-status,.a-measure-status{grid-column:2;color:var(--muted);font-size:12px;line-height:1.5;margin:0}
+.a-measure-time{grid-column:2;color:var(--muted);font-size:12px;line-height:1.5}
+.a-disclosure-mark{grid-column:3;grid-row:1;width:20px;height:20px;position:relative;align-self:start}
+.a-disclosure-mark::before,.a-disclosure-mark::after{content:"";position:absolute;left:3px;top:9px;width:14px;height:1px;background:currentColor}
+.a-disclosure-mark::after{transform:rotate(90deg)}
+details[open] .a-disclosure-mark::after{display:none}
+.a-disclosure-body,.a-design-body{padding:0 32px 24px 44px;color:var(--muted)}
+.a-design-evidence{margin-top:20px}
+.a-design-evidence h4{color:var(--ink)}
+.a-scale{padding:20px 0;border-top:1px solid var(--rule)}
+.a-scale .a-inline-status{margin:0 0 8px}
+.a-scale p{color:var(--muted)}
+.a-faq summary{grid-template-columns:minmax(0,1fr) 20px;min-height:64px}
+.a-faq .a-disclosure-mark{grid-column:2}
+.a-faq .a-disclosure-body{padding-left:0}
+.method-page code{font-size:.9em;overflow-wrap:anywhere}
+@media(max-width:1050px){.a-method-layout{grid-template-columns:200px minmax(0,1fr);gap:24px}}
+@media(max-width:760px){
+ .a-method-layout{grid-template-columns:1fr;gap:32px}
+ .a-method-index{position:static}
+ .a-method-index ol{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:20px}
+ .a-method-index a{height:100%}
+}
+@media(max-width:520px){
+ .a-method-hero{padding-block:24px}
+ .a-section-head h2{font-size:24px}
+ .a-method-section{padding-block:28px}
+ .a-method-note,.a-data-column{padding:20px}
+ .a-method-content summary{grid-template-columns:26px minmax(0,1fr) 20px;column-gap:8px}
+ .a-disclosure-body,.a-design-body{padding-left:0;padding-right:0}
+ .a-faq summary{grid-template-columns:minmax(0,1fr) 20px}
+}
