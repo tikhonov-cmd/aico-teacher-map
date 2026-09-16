@@ -38,4 +38,15 @@ $('next').addEventListener('click',()=>{if(active<5)selectStage(active+1);});
 $('previous').addEventListener('click',()=>{if(active>0)selectStage(active-1);});
 function fromHash(){const m=/^#stage-(p1|p2|r|t1|t2|t3)$/.exec(location.hash);selectStage(m?stages.findIndex(s=>s.id===m[1]):0,false);}
 window.addEventListener('hashchange',fromHash);window.addEventListener('popstate',fromHash);
-fromHash();})();
+fromHash();
+window.stabilizePanel($('event-copy'),(clone,sample)=>{
+ stages.forEach((s,i)=>{
+  clone.querySelector('#event-title').textContent=s.name;
+  clone.querySelector('#event-code').textContent=`Этап ${i+1} из 6`;
+  clone.querySelector('#event-time').textContent=s.time;
+  clone.querySelector('#stage-body').innerHTML=`<p class="event-description">${s.description}</p><h3>Что нужно сделать</h3><ul class="event-actions">${s.actions.map(t=>`<li>${t}</li>`).join('')}</ul>`;
+  clone.querySelector('#event-note').textContent=s.note;
+  clone.querySelector('#next-text').textContent=i===5?'Последний этап':'Дальше';
+  sample();
+ });
+});})();

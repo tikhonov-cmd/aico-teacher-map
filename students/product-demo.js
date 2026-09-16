@@ -163,7 +163,7 @@ window.createProductDemo = function (onChange) {
     } else if (button.id === 'next-question') {
       state.question = (state.question + 1) % quizQuestions.length; render();
       $('demo-content').querySelector('h4').setAttribute('tabindex', '-1');
-      $('demo-content').querySelector('h4').focus();
+      $('demo-content').querySelector('h4').focus({preventScroll:true});
       onChange(null, `Вопрос ${state.question + 1} из ${quizQuestions.length}.`);
     } else if (button.id === 'case-reveal') {
       const open = button.getAttribute('aria-expanded') !== 'true'; button.setAttribute('aria-expanded', String(open)); button.textContent = open ? 'Скрыть разбор' : 'Показать разбор'; $('case-feedback').hidden = !open;
@@ -173,4 +173,27 @@ window.createProductDemo = function (onChange) {
     }
   });
   render();
+  window.stabilizePanel($('demo-controls'),(clone,sample)=>{
+    clone.querySelectorAll('[hidden]').forEach(el=>el.hidden=false);
+    for(const note of levels){clone.querySelector('#level-note').textContent=note;sample();}
+  });
+  window.stabilizePanel(document.querySelector('.demo-preview'), (clone, sample) => {
+    const saved={...state};
+    function measure(format,html){
+      clone.querySelector('#response-title').textContent=formats[format][0];
+      clone.querySelector('#demo-purpose').textContent=formats[format][1];
+      clone.querySelector('#demo-content').innerHTML=html;
+      sample();
+    }
+    try {
+      for(state.level=0;state.level<3;state.level++){
+        for(const theme of Object.values(themes))measure('read',read(theme));
+        for(const reply of replies)measure('chat',chat().replace('<div id="chat-reply" class="demo-feedback" aria-live="polite" hidden></div>',`<div class="demo-feedback">${paragraphs([reply[state.level]])}</div>`));
+      }
+      for(state.question=0;state.question<quizQuestions.length;state.question++){
+        for(const feedback of quizQuestions[state.question].feedback)measure('test',quiz().replace('<div id="quiz-feedback" class="demo-feedback" role="status" aria-live="polite" hidden></div>',`<div class="demo-feedback">${paragraphs([feedback])}</div>`));
+      }
+      measure('case',caseStudy(themes.plain).replace('id="case-feedback" class="demo-feedback" hidden','id="case-feedback" class="demo-feedback"').replace('Показать разбор','Скрыть разбор'));
+    } finally {Object.assign(state,saved);}
+  });
 };

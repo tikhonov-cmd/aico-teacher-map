@@ -88,7 +88,7 @@ button svg,a svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-wid
 .demo-content h4{font-size:20px;margin-bottom:12px}
 .demo-content p{font-size:16px;line-height:1.5;margin-bottom:12px}
 .demo-content p:last-child{margin-bottom:0}
-.demo-caption{font-size:12px;line-height:1.5;color:var(--muted);text-align:center;margin:12px 0 0}
+.demo-caption{font-size:12px;line-height:1.5;color:var(--muted);text-align:left;margin:12px 0 0}
 .demo-answers,.demo-chat-questions{display:grid;grid-template-columns:1fr;gap:8px;margin-top:12px}
 .demo-answers button,.demo-chat-questions button{min-height:44px;padding:10px 12px;font-size:14px;line-height:1.4;text-align:left;text-wrap:balance;border:1px solid var(--rule);border-radius:6px;background:var(--paper)}
 .demo-answers button:hover,.demo-chat-questions button:hover{border-color:var(--blue)}
@@ -155,12 +155,12 @@ details[open] .vertical{display:none}
 .route-button[aria-pressed=true] .route-num{color:var(--blue)}
 .route-title{font-size:16px;line-height:1.35;font-weight:600;min-width:0}
 .route-code{display:block;font-size:12px;font-weight:400;line-height:1.4;margin-top:4px;color:var(--muted)}
-.route-footnote{margin:16px 12px 0;padding-top:16px;border-top:1px solid var(--rule);font-size:12px;line-height:1.5;color:var(--muted)}
+.route-footnote{margin:12px 0 0;font-size:12px;line-height:1.5;color:var(--muted)}
 .route-detail{min-width:0}
-.stage-pagination{display:flex;justify-content:space-between;gap:16px;margin-bottom:12px;min-height:44px}
+.stage-pagination{display:flex;justify-content:space-between;gap:16px;margin:20px 0 0;min-height:44px}
 .event-next{display:inline-flex;align-items:center;gap:12px;min-height:44px;border:0;background:none;padding:8px 0;color:var(--blue);font-weight:600;font-size:16px}
 .event-next:hover{text-decoration:underline;text-underline-offset:5px}.event-next:disabled{opacity:.45;cursor:default;text-decoration:none}
-.event-copy{background:var(--surface);border-radius:var(--radius);padding:24px}
+.event-copy{display:flex;flex-direction:column;background:var(--surface);border-radius:var(--radius);padding:24px}
 .event-copy h2{font-size:28px;margin-bottom:12px}
 .event-meta{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:14px;color:var(--muted);margin-bottom:20px}
 .event-meta b{color:var(--blue);font-weight:600}
@@ -224,3 +224,7 @@ html[data-motion=off]::view-transition-old(root),html[data-motion=off]::view-tra
  @view-transition{navigation:none}
  ::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}
 }
+
+/* Panel dimensions are measured from all states, then held steady until width changes. */
+.event-copy .stage-pagination{margin-top:auto;padding-top:20px}
+.demo-preview,.event-copy{overflow-wrap:break-word}
