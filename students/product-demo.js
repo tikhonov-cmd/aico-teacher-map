@@ -2,6 +2,7 @@
    Causal-inference reference: https://www.worldbank.org/en/programs/sief-trust-fund/publication/impact-evaluation-in-practice */
 window.createProductDemo = function (onChange) {
   const $ = id => document.getElementById(id);
+  let panelSizer;
   const state = { format: 'read', level: 0, interest: 'plain', question: 0 };
   const names = { read: 'Лонгрид', test: 'Тест', case: 'Кейс', chat: 'Чат' };
   const levels = [
@@ -138,6 +139,7 @@ window.createProductDemo = function (onChange) {
     $('demo-purpose').textContent = formats[state.format][1];
     $('demo-content').innerHTML = state.format === 'read' ? read(themes[state.interest]) : state.format === 'case' ? caseStudy(themes.plain) : state.format === 'test' ? quiz() : chat();
     for (const key of ['format', 'level', 'interest']) document.querySelectorAll(`[data-${key}]`).forEach(b => b.setAttribute('aria-pressed', String(b.dataset[key] === String(state[key]))));
+    panelSizer?.fit();
   }
   $('demo-controls').hidden = false;
   $('demo-controls').addEventListener('click', e => {
@@ -171,29 +173,33 @@ window.createProductDemo = function (onChange) {
       document.querySelectorAll('[data-question]').forEach(b => b.setAttribute('aria-pressed', String(b === button)));
       $('chat-reply').innerHTML = paragraphs([replies[Number(button.dataset.question)][state.level]]); $('chat-reply').hidden = false;
     }
+    panelSizer?.fit();
   });
   render();
   window.stabilizePanel($('demo-controls'),(clone,sample)=>{
     clone.querySelectorAll('[hidden]').forEach(el=>el.hidden=false);
     for(const note of levels){clone.querySelector('#level-note').textContent=note;sample();}
   });
-  window.stabilizePanel(document.querySelector('.demo-preview'), (clone, sample) => {
+  panelSizer=window.stabilizePanel(document.querySelector('.demo-preview'), (clone, sample) => {
     const saved={...state};
-    function measure(format,html){
+    function measure(format,html,size='expanded'){
       clone.querySelector('#response-title').textContent=formats[format][0];
       clone.querySelector('#demo-purpose').textContent=formats[format][1];
       clone.querySelector('#demo-content').innerHTML=html;
-      sample();
+      sample(size);
     }
     try {
+      measure('chat',chat(),'compact');
+      measure('case',caseStudy(themes.plain),'compact');
       for(state.level=0;state.level<3;state.level++){
-        for(const theme of Object.values(themes))measure('read',read(theme));
+        for(const theme of Object.values(themes))measure('read',read(theme),state.level===0?'compact':'expanded');
         for(const reply of replies)measure('chat',chat().replace('<div id="chat-reply" class="demo-feedback" aria-live="polite" hidden></div>',`<div class="demo-feedback">${paragraphs([reply[state.level]])}</div>`));
       }
       for(state.question=0;state.question<quizQuestions.length;state.question++){
+        measure('test',quiz(),'compact');
         for(const feedback of quizQuestions[state.question].feedback)measure('test',quiz().replace('<div id="quiz-feedback" class="demo-feedback" role="status" aria-live="polite" hidden></div>',`<div class="demo-feedback">${paragraphs([feedback])}</div>`));
       }
       measure('case',caseStudy(themes.plain).replace('id="case-feedback" class="demo-feedback" hidden','id="case-feedback" class="demo-feedback"').replace('Показать разбор','Скрыть разбор'));
     } finally {Object.assign(state,saved);}
-  });
+  },{twoSizes:true});
 };
