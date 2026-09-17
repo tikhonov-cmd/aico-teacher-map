@@ -42,9 +42,6 @@ details[open] .a-disclosure-mark::after{display:none}
 .a-scale{padding:20px 0;border-top:1px solid var(--rule)}
 .a-scale .a-inline-status{margin:0 0 8px}
 .a-scale p{color:var(--muted)}
-.a-faq summary{grid-template-columns:minmax(0,1fr) 20px;min-height:64px}
-.a-faq .a-disclosure-mark{grid-column:2}
-.a-faq .a-disclosure-body{padding-left:0}
 .method-page code{font-size:.9em;overflow-wrap:anywhere}
 @media(max-width:1050px){.a-method-layout{grid-template-columns:200px minmax(0,1fr);gap:24px}}
 @media(max-width:760px){
@@ -60,5 +57,9 @@ details[open] .a-disclosure-mark::after{display:none}
  .a-method-note,.a-data-column{padding:20px}
  .a-method-content summary{grid-template-columns:26px minmax(0,1fr) 20px;column-gap:8px}
  .a-disclosure-body,.a-design-body{padding-left:0;padding-right:0}
- .a-faq summary{grid-template-columns:minmax(0,1fr) 20px}
+}
+
+@media(min-width:761px){
+ .a-method-index a{padding-inline:12px}
+ .a-method-index a[aria-current="location"]{color:var(--blue);background:var(--selected);box-shadow:inset 2px 0 var(--blue)}
 }
