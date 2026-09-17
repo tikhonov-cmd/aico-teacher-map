@@ -43,3 +43,6 @@ src/plugins/impeccable-live.client.ts
 DESIGN*.md
 PRODUCT.md
 index-*.html
+
+# Separate repository for the relocated student site
+/student-site/
